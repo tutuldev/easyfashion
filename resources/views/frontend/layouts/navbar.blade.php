@@ -1,5 +1,5 @@
-<nav class="bg-white/15 shadow-md ">
-    <div class="mx-auto max-w-screen-2xl px-3 lg:px-5 ">
+<nav class="absolute top-0 left-0 w-full z-10 bg-white/15 shadow-md ">
+    <div class="mx-auto max-w-screen-xl px-3 lg:px-5 ">
         <div class="flex justify-between py-5 items-center">
 
             <!-- Left Menu -->
@@ -14,11 +14,11 @@
             </a>
 
             <!-- EID AL-ADHA 25 -->
-            <a href="{{ url('/eid-offer') }}" class="relative group overflow-hidden py-1 {{ request()->is('eid-offer') ? 'text-white' : '' }}">
+            <a href="{{ url('/offer') }}" class="relative group overflow-hidden py-1 {{ request()->is('offer') ? 'text-white' : '' }}">
                 EID AL-ADHA 25
                 <span class="absolute bottom-0 left-0 h-[3px] w-full bg-white transition-transform duration-300 ease-in-out
                             origin-right scale-x-0 group-hover:origin-left group-hover:scale-x-100
-                            {{ request()->is('eid-offer') ? 'scale-x-100 origin-left' : '' }}"></span>
+                            {{ request()->is('offer') ? 'scale-x-100 origin-left' : '' }}"></span>
             </a>
 
             <!-- Shop -->
