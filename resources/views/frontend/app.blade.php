@@ -9,33 +9,137 @@
     @vite('resources/css/custom.css')
      <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
-    <style>
-        /* Pagination bar style */
-    .swiper-pagination {
-      @apply flex justify-center gap-3 bottom-8 w-full;
-    }
+<style>
+  /* Swiper Pagination Customization */
+  .swiper-pagination-bullet {
+    width: 32px;
+    height: 2px;
+    background: rgba(255, 255, 255, 0.35);
+    border-radius: 1px;
+    opacity: 1;
+    transition: all 0.3s;
+  }
 
-    .swiper-pagination-bullet {
-      width: 32px;
-      height: 2px;
-      background: rgba(255, 255, 255, 0.35);
-      border-radius: 1px;
+  .swiper-pagination-bullet-active {
+    background: #fff;
+    height: 3px;
+  }
+
+  /* Hide default Swiper navigation buttons */
+  .swiper-button-prev,
+  .swiper-button-next {
+    display: none;
+  }
+
+  /* Scroll Button Animation */
+  @keyframes borderSlideInRightVanishLeft {
+    0% {
+      transform: scaleX(0);
+      opacity: 0;
+      transform-origin: right;
+    }
+    40% {
+      transform: scaleX(1);
       opacity: 1;
-      transition: all 0.3s;
+      transform-origin: right;
     }
-
-    .swiper-pagination-bullet-active {
-      background: #fff;
-      height: 3px;
+    70% {
+      transform: scaleX(1);
+      opacity: 1;
+      transform-origin: left;
     }
-
-    /* Hide default swiper navigation buttons */
-    .swiper-button-prev,
-    .swiper-button-next {
-      display: none;
+    100% {
+      transform: scaleX(0);
+      opacity: 0;
+      transform-origin: left;
     }
+  }
 
-    </style>
+  .animate-borderSlideInRightVanishLeft {
+    animation: borderSlideInRightVanishLeft 3s ease-in-out infinite;
+    display: block;
+  }
+
+  /* --- Custom Layers CSS --- */
+  .overlay,
+  .blur-layer {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    will-change: transform, opacity;
+    z-index: 5;
+  }
+
+  /* Overlay (white) */
+  .overlay {
+    background: #fff;
+    transform: translateX(0);
+  }
+
+  .overlay-slide {
+    animation: overlay-slide 0.7s forwards ease-in-out;
+  }
+
+  @keyframes overlay-slide {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-100%);
+    }
+  }
+
+  /* Blur Layer */
+  .blur-layer {
+    opacity: 0;
+    z-index: 4;
+    backdrop-filter: blur(8px);
+  }
+
+  /* Initial state for blur layer on page load - 80% left and visible */
+  .blur-layer.initial-state {
+    transform: translateX(-75%) translateZ(0);
+    opacity: 1;
+  }
+
+  .blur-enter {
+    animation: blur-enter 0.2s forwards ease-out;
+  }
+
+  @keyframes blur-enter {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  .blur-slide-left {
+    animation: blur-slide-left 0.7s forwards ease-in-out;
+  }
+
+  @keyframes blur-slide-left {
+    from {
+      transform: translateX(0%) translateZ(0);
+    }
+    to {
+      transform: translateX(-75%) translateZ(0);
+    }
+  }
+
+  /* Adjust pagination position in a more specific way for the bottom bar */
+  .swiper-pagination.custom-bottom-bar {
+    position: static !important;
+    transform: none !important;
+    width: auto !important;
+    display: flex;
+    justify-content: center;
+    flex-grow: 1;
+  }
+</style>
 </head>
 <body class="min-h-screen bg-fixed bg-cover bg-center bg-no-repeat relative" style="background-image: url('{{ asset('images/bg-image.webp') }}');">
 
