@@ -140,7 +140,87 @@
     flex-grow: 1;
   }
 
-  
+  /* --- Custom styles for the NEW Polo Collections Swiper --- */
+
+/* Product Card specific styling (no change from previous) */
+.product-image {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+    display: block;
+}
+
+.product-card {
+    position: relative;
+    overflow: hidden;
+}
+.new-badge {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    background-color: white;
+    border: 1px solid #e2e8f0;
+    padding: 4px 8px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #333;
+    text-transform: uppercase;
+    z-index: 10;
+}
+
+/* Position the swiper-container relative for absolute navigation buttons */
+.swiper-container.polo-swiper {
+    position: relative;
+    overflow: hidden; /* Ensure slides don't overflow */
+}
+
+.swiper-container.polo-swiper .swiper-button-prev,
+.swiper-container.polo-swiper .swiper-button-next {
+    display: block !important;
+    color: #1a73e8 !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    z-index: 10;
+    margin-top: 0 !important;
+}
+
+.swiper-container.polo-swiper .swiper-button-prev {
+    left: 10px !important; /* Adjust position from the left */
+}
+
+.swiper-container.polo-swiper .swiper-button-next {
+    right: 10px !important; /* Adjust position from the right */
+}
+
+/* Override pagination bullet styles */
+.swiper-container.polo-swiper .swiper-pagination-bullet {
+    width: 8px;
+    height: 8px;
+    background: #cbd5e0;
+    opacity: 1;
+    border-radius: 50%;
+    margin: 0 4px;
+}
+
+.swiper-container.polo-swiper .swiper-pagination-bullet-active {
+    background: #1a73e8;
+    width: 8px;
+    height: 8px;
+}
+
+/* Optional: Hide buttons on small screens */
+@media (max-width: 767px) {
+    .swiper-container.polo-swiper .swiper-button-prev,
+    .swiper-container.polo-swiper .swiper-button-next {
+        display: none !important;
+    }
+}
+/* Only hide navigation buttons for the specific polo-swiper */
+.swiper-container.polo-swiper .swiper-button-prev,
+.swiper-container.polo-swiper .swiper-button-next {
+    display: none !important;
+}
+
 </style>
 </head>
 <body class="min-h-screen bg-fixed bg-cover bg-center bg-no-repeat relative" style="background-image: url('{{ asset('images/bg-image.webp') }}');">
