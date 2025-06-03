@@ -7,6 +7,7 @@
     @include('frontend.layouts.tranding')
     @include('frontend.layouts.polo-collections')
     @include('frontend.layouts.product-category')
+    @include('frontend.layouts.jins')
 
 
 @endsection
