@@ -8,6 +8,7 @@
     @vite('resources/css/app.css')
     @vite('resources/css/custom.css')
      <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 <style>
   /* Swiper Pagination Customization */
