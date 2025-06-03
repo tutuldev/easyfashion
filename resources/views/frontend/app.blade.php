@@ -223,6 +223,7 @@
 
 </style>
 </head>
+
 <body class="min-h-screen bg-fixed bg-cover bg-center bg-no-repeat relative" style="background-image: url('{{ asset('images/bg-image.webp') }}');">
 
     <header>
@@ -230,6 +231,7 @@
     </header>
 
     @yield('content')
+
     @stack('scripts')
 </body>
 
