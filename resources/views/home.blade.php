@@ -10,6 +10,7 @@
     @include('frontend.layouts.jins')
     @include('frontend.layouts.social')
     @include('frontend.layouts.video')
+    @include('frontend.layouts.justin')
 
 
 @endsection

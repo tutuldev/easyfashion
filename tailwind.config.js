@@ -12,8 +12,11 @@ export default {
     theme: {
         extend: {
             fontFamily: {
-                sans: ['Figtree', ...defaultTheme.fontFamily.sans],
-            },
+                             sans: ['Figtree', ...defaultTheme.fontFamily.sans],
+                        },
+            screens:    {
+                        'xs': '480px', // xs দিয়ে 480px এর breakpoint বানালাম
+                         },
         },
     },
 
