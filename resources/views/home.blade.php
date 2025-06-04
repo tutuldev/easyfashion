@@ -11,6 +11,7 @@
     @include('frontend.layouts.social')
     @include('frontend.layouts.video')
     @include('frontend.layouts.justin')
+    @include('frontend.layouts.process')
 
 
 @endsection
