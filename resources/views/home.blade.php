@@ -12,6 +12,7 @@
     @include('frontend.layouts.video')
     @include('frontend.layouts.justin')
     @include('frontend.layouts.process')
+    @include('frontend.layouts.followus')
 
 
 @endsection
