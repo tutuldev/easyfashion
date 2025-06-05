@@ -1,6 +1,6 @@
     <aside id="sidebar" class="w-64 bg-gray-800 text-white p-4 flex flex-col fixed inset-y-0 left-0 z-50 shadow-lg sidebar-transition transform -translate-x-full lg:translate-x-0 overflow-y-auto">
             <div class="flex justify-between items-center mb-6">
-                <div class="text-2xl font-semibold">E-commerce Admin</div>
+                <div class="text-2xl font-semibold">Dashboard</div>
                 <button id="closeSidebarBtn" class="lg:hidden text-gray-400 hover:text-white focus:outline-none">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                 </button>
@@ -9,7 +9,7 @@
             <nav class="flex-grow">
                 <ul>
                     <li class="mb-2">
-                        <a href="#" class="flex items-center p-2 text-gray-300 hover:bg-gray-700 rounded-md transition duration-200">
+                        <a href="/" class="flex items-center p-2 text-gray-300 hover:bg-gray-700 rounded-md transition duration-200">
                             <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m0 0l-7 7m7-7v10a1 1 0 01-1 1h-3"></path></svg>
                             Overview
                         </a>
