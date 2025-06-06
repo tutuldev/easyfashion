@@ -36,9 +36,10 @@
         <div id="sidebarBackdrop" class="fixed inset-0 bg-black opacity-50 z-40 hidden lg:hidden" onclick="toggleSidebar()"></div>
 
         @include('backend.layouts.asidebar')
-        @include('backend.layouts.main')
-
+         <main class="flex-grow p-6 lg:ml-64 overflow-y-auto">
+         @include('backend.layouts.header')
         @yield('content')
+        </main>
     </div>
 
 

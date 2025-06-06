@@ -29,8 +29,8 @@
                             <svg class="w-4 h-4 transform transition-transform arrow-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                         </button>
                         <ul id="categoriesDropdown" class="dropdown-menu ml-6 mt-1 space-y-1">
-                            <li><a href="#" class="block p-2 text-gray-400 hover:bg-gray-700 rounded-md text-sm">All Categories</a></li>
-                            <li><a href="#" class="block p-2 text-gray-400 hover:bg-gray-700 rounded-md text-sm">Add New Category</a></li>
+                            <li><a href="{{route('categories.index')}}" class="block p-2 text-gray-400 hover:bg-gray-700 rounded-md text-sm">All Categories</a></li>
+                            <li><a href="{{route("categories.create")}}" class="block p-2 text-gray-400 hover:bg-gray-700 rounded-md text-sm">Add New Category</a></li>
                             <li><a href="#" class="block p-2 text-gray-400 hover:bg-gray-700 rounded-md text-sm">Category Reports</a></li>
                         </ul>
                     </li>
@@ -44,8 +44,8 @@
                             <svg class="w-4 h-4 transform transition-transform arrow-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                         </button>
                         <ul id="productsDropdown" class="dropdown-menu ml-6 mt-1 space-y-1">
-                            <li><a href="#" class="block p-2 text-gray-400 hover:bg-gray-700 rounded-md text-sm">All Products</a></li>
-                            <li><a href="#" class="block p-2 text-gray-400 hover:bg-gray-700 rounded-md text-sm">Add New Product</a></li>
+                            <li><a href="{{route('products.index')}}" class="block p-2 text-gray-400 hover:bg-gray-700 rounded-md text-sm">All Products</a></li>
+                            <li><a href="{{route('products.create')}}" class="block p-2 text-gray-400 hover:bg-gray-700 rounded-md text-sm">Add New Product</a></li>
                             <li><a href="#" class="block p-2 text-gray-400 hover:bg-gray-700 rounded-md text-sm">Product Inventory</a></li>
                             <li><a href="#" class="block p-2 text-gray-400 hover:bg-gray-700 rounded-md text-sm">Product Reviews</a></li>
                         </ul>
