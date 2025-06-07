@@ -7,11 +7,21 @@
     <title>@yield('title', 'Easy Fashion')</title>
     @vite('resources/css/app.css')
     @vite('resources/css/custom.css')
-     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+     {{-- <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" /> --}}
+     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:FILL@0;1" rel="stylesheet" />
+
      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 <style>
+
+    /* customize material icon */
+            .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    .material-symbols-outlined.filled {
+      font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
   /* Swiper Pagination Customization */
   .swiper-pagination-bullet {
     width: 32px;

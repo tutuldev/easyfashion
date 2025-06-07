@@ -4,57 +4,8 @@
 
         <div class="swiper-container polo-swiper w-full pb-10">
             <div class="swiper-wrapper">
-                {{-- <div class="swiper-slide">
-                    <div class="product-card bg-white w-full group overflow-hidden">
-                        <div class="relative h-[400px] w-full border overflow-hidden">
-                            <img src="{{ asset('images/1.webp') }}" alt="Polo T-Shirt 1"
-                                class="w-full h-full object-cover block">
-                            <span class="absolute bottom-2 left-2 bg-white text-[10px] px-2 py-0.5">New</span>
-                        </div>
 
-                        <div class="py-4 flex flex-col items-start justify-between">
-                            <p class="text-lg font-semibold ">Stripe Polo T-Shirt</p>
-
-                            <div class="relative w-full h-6 mt-2">
-                                <p class="text-gray-600 text-sm
-                                        transition-all duration-500
-                                        opacity-100 translate-y-0
-                                        group-hover:opacity-0 group-hover:-translate-y-full">
-                                    ৳1,150
-                                </p>
-
-                                <div
-                                    class="flex items-center gap-3 text-[14px] font-semibold absolute top-0 left-0 text-gray-600">
-                                    <button
-                                        class="transition-all duration-300 opacity-0 translate-y-full
-                                            group-hover:opacity-100 group-hover:translate-y-0 group-hover:delay-[0ms] delay-[200ms]">
-                                        SELECT&nbsp;OPCTIONS
-                                    </button>
-
-                                    <button class="border-b-2 border-black text-md transition-all duration-300
-                                            opacity-0 translate-y-full group-hover:opacity-100
-                                            group-hover:translate-y-0 group-hover:delay-[100ms] delay-[200ms]">
-                                        QUICKVIEW
-                                    </button>
-
-                                    <button
-                                        class="transition-all duration-300 opacity-0 translate-y-full
-                                            group-hover:opacity-100 group-hover:translate-y-0 group-hover:delay-[200ms] delay-[200ms]">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 stroke-black fill-transparent"
-                                            viewBox="0 0 24 24" fill="none" stroke-width="2">
-                                            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5
-                                                    2 6 4 4 6.5 4c1.74 0 3.41 1.01 4.13 2.44H13.37C14.09 5.01
-                                                    15.76 4 17.5 4 20 4 22 6 22 8.5c0 3.78-3.4 6.86-8.55
-                                                    11.54L12 21.35z" />
-                                        </svg>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div> --}}
-                {{-- singel post  --}}
-                @include('frontend.singel-card')
+                 @include('frontend.layouts.singel-card')
 
 
             </div>
