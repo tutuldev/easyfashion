@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Backend\CategoryController;
 use App\Http\Controllers\Backend\ProductController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -27,5 +28,16 @@ Route::middleware('auth')->group(function () {
     Route::resource('products', ProductController::class);
 
 });
+
+Route::resource('orders', OrderController::class);
+// Public order form (no login required)
+Route::get('/order', [OrderController::class, 'create']);
+Route::post('/order', [OrderController::class, 'store']);
+
+// Admin order list
+Route::middleware(['auth'])->get('/admin/orders', [OrderController::class, 'index']);
+
+
+
 
 require __DIR__.'/auth.php';
