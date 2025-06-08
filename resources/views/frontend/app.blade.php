@@ -15,6 +15,19 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 <style>
 
+    /* sidebar quantity updown button hidden  */
+    /* Hide number input arrows for Webkit browsers (Chrome, Safari, Edge) */
+.sidebar-quantity-input::-webkit-outer-spin-button,
+.sidebar-quantity-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Hide number input arrows for Firefox */
+.sidebar-quantity-input {
+    -moz-appearance: textfield;
+}
+
     /* customize material icon */
             .material-symbols-outlined {
       font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
