@@ -32,10 +32,19 @@ Route::middleware('auth')->group(function () {
 Route::resource('orders', OrderController::class);
 // Public order form (no login required)
 Route::get('/order', [OrderController::class, 'create']);
-Route::post('/order', [OrderController::class, 'store']);
+Route::post('/order', [OrderController::class, 'store'])->name('order');
 
 // Admin order list
 Route::middleware(['auth'])->get('/admin/orders', [OrderController::class, 'index']);
+Route::get('/order-confirmation/{order}', [OrderController::class, 'show'])->name('order.confirmation');
+
+// cart
+Route::get('/cart', function () {
+    return view('cart');
+});
+Route::get('/checkout', function () {
+    return view('checkout');
+});
 
 
 

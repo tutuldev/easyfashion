@@ -4,6 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Easy Fashion')</title>
     @vite('resources/css/app.css')
     @vite('resources/css/custom.css')
@@ -14,6 +15,20 @@
      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 <style>
+    /* cart quantity updown button hidden  */
+    /* Hide increment/decrement buttons for input type="number" */
+.cart-page-quantity-input::-webkit-outer-spin-button,
+.cart-page-quantity-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Firefox */
+.cart-page-quantity-input[type=number] {
+    -moz-appearance: textfield;
+}
+
+
 
     /* sidebar quantity updown button hidden  */
     /* Hide number input arrows for Webkit browsers (Chrome, Safari, Edge) */
@@ -257,8 +272,8 @@
 
     @yield('content')
 
-    @include('frontend.layouts.footer')
-    @include('frontend.layouts.copyright')
+    {{-- @include('frontend.layouts.footer') --}}
+    {{-- @include('frontend.layouts.copyright') --}}
     @stack('scripts')
 </body>
 

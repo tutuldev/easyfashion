@@ -3,13 +3,13 @@
         <div class="flex justify-between py-5 items-center">
 
             <!-- Left Menu -->
-            <div class="hidden lg:flex space-x-4 text-base font-bold text-white">
+            <div class="hidden lg:flex space-x-4 text-base font-bold {{ request()->is('/') ? 'text-white' : 'text-black' }}">
 
                 <!-- Home -->
                 <a href="{{ url('/') }}"
-                    class="relative group overflow-hidden py-1 {{ request()->is('/') ? 'text-white' : '' }}">
+                    class="relative group overflow-hidden py-1 {{ request()->is('/') ? 'text-white' : 'text-black' }}">
                     HOME
-                    <span class="absolute bottom-0 left-0 h-[3px] w-full bg-white transition-transform duration-300 ease-in-out
+                    <span class="absolute bottom-0 left-0 h-[3px] w-full {{ request()->is('/') ? 'bg-white' : 'bg-black' }} transition-transform duration-300 ease-in-out
                             origin-right scale-x-0 group-hover:origin-left group-hover:scale-x-100
                             {{ request()->is('/') ? 'scale-x-100 origin-left' : '' }}"></span>
                 </a>
@@ -18,7 +18,7 @@
                 <a href="{{ url('/offer') }}"
                     class="relative group overflow-hidden py-1 {{ request()->is('offer') ? 'text-white' : '' }}">
                     EID AL-ADHA 25
-                    <span class="absolute bottom-0 left-0 h-[3px] w-full bg-white transition-transform duration-300 ease-in-out
+                    <span class="absolute bottom-0 left-0 h-[3px] w-full {{ request()->is('/') ? 'bg-white' : 'bg-black' }} transition-transform duration-300 ease-in-out
                             origin-right scale-x-0 group-hover:origin-left group-hover:scale-x-100
                             {{ request()->is('offer') ? 'scale-x-100 origin-left' : '' }}"></span>
                 </a>
@@ -27,7 +27,7 @@
                 <a href="{{ url('/shop') }}"
                     class="relative group overflow-hidden py-1 {{ request()->is('shop') ? 'text-white' : '' }}">
                     SHOP
-                    <span class="absolute bottom-0 left-0 h-[3px] w-full bg-white transition-transform duration-300 ease-in-out
+                    <span class="absolute bottom-0 left-0 h-[3px] w-full {{ request()->is('/') ? 'bg-white' : 'bg-black' }} transition-transform duration-300 ease-in-out
                             origin-right scale-x-0 group-hover:origin-left group-hover:scale-x-100
                             {{ request()->is('shop') ? 'scale-x-100 origin-left' : '' }}"></span>
                 </a>
@@ -36,7 +36,7 @@
                 <a href="{{ url('/easy') }}"
                     class="relative group overflow-hidden py-1 {{ request()->is('easy') ? 'text-white' : '' }}">
                     EASY
-                    <span class="absolute bottom-0 left-0 h-[3px] w-full bg-white transition-transform duration-300 ease-in-out
+                    <span class="absolute bottom-0 left-0 h-[3px] w-full {{ request()->is('/') ? 'bg-white' : 'bg-black' }} transition-transform duration-300 ease-in-out
                             origin-right scale-x-0 group-hover:origin-left group-hover:scale-x-100
                             {{ request()->is('easy') ? 'scale-x-100 origin-left' : '' }}"></span>
                 </a>
@@ -45,7 +45,7 @@
                 <a href="{{ url('/how-to-order') }}"
                     class="relative group overflow-hidden py-1 {{ request()->is('how-to-order') ? 'text-white' : '' }}">
                     How to Order
-                    <span class="absolute bottom-0 left-0 h-[3px] w-full bg-white transition-transform duration-300 ease-in-out
+                    <span class="absolute bottom-0 left-0 h-[3px] w-full {{ request()->is('/') ? 'bg-white' : 'bg-black' }} transition-transform duration-300 ease-in-out
                             origin-right scale-x-0 group-hover:origin-left group-hover:scale-x-100
                             {{ request()->is('how-to-order') ? 'scale-x-100 origin-left' : '' }}"></span>
                 </a>
@@ -58,7 +58,7 @@
             <div class="flex items-center space-x-3">
                 <div id="menu-btn" class="flex lg:hidden items-center ">
                     <span
-                        class="material-symbols-outlined text-2xl   text-white cursor-pointer hover:text-green-500 transition ">menu</span>
+                        class="material-symbols-outlined text-2xl   {{ request()->is('/') ? 'text-white' : 'text-black' }} cursor-pointer hover:text-green-500 transition ">menu</span>
                 </div>
                 <!-- Center Logo -->
                 <div class="flex-shrink-0">
@@ -67,16 +67,16 @@
             </div>
 
             <!-- Right Icons -->
-            <div class="flex items-center space-x-2 sm:space-x-4 lg:space-x-8 text-white">
+            <div class="flex items-center space-x-2 sm:space-x-4 lg:space-x-8 {{ request()->is('/') ? 'text-white' : 'text-black' }}">
                 <button class="hover:">
                     <span class="material-symbols-outlined">search</span>
                 </button>
                 <div class="relative">
     <button id="openSidebarBtn"
-        class="relative p-2 rounded-full  text-white   ">
+        class="relative p-2 rounded-full  {{ request()->is('/') ? 'text-white' : 'text-black' }}   ">
         <span class="material-symbols-outlined text-3xl">shopping_bag</span>
         <span id="itemCount"
-            class="absolute -top-2 -right-2 bg-red-500 text-white text-xs w-6 h-6 flex items-center justify-center rounded-full ">
+            class="absolute -top-2 -right-2 bg-red-500 {{ request()->is('/') ? 'text-white' : 'text-black' }} text-xs w-6 h-6 flex items-center justify-center rounded-full ">
             0
         </span>
     </button>
@@ -109,11 +109,17 @@
         <div class="mb-4">
             <a href="#" class="text-blue-600 text-sm hover:underline">Have a Coupon?</a>
         </div>
-        <button class="w-full bg-blue-100 text-blue-600 font-bold py-2 rounded-md mb-2 hover:bg-blue-200 transition duration-300">VIEW CART</button>
-        <button class="w-full bg-gray-800 text-white font-bold py-2 rounded-md flex items-center justify-center hover:bg-gray-700 transition duration-300">
-            CHECKOUT
-            <span class="material-symbols-outlined ml-2">arrow_right_alt</span>
-        </button>
+       <a href="/cart">
+  <button class="w-full bg-blue-100 text-blue-600 font-bold py-2 rounded-md mb-2 hover:bg-blue-200 transition duration-300">
+    VIEW CART
+  </button>
+</a>
+
+      <a href="/checkout" class="w-full bg-gray-800 text-white font-bold py-2 rounded-md flex items-center justify-center hover:bg-gray-700 transition duration-300">
+    CHECKOUT
+    <span class="material-symbols-outlined ml-2">arrow_right_alt</span>
+</a>
+
     </div>
 </div>
 
@@ -288,7 +294,7 @@
     </script>
 {{-- end wish list  --}}
 {{-- add to cart  --}}
-<script>
+{{-- <script>
     const openSidebarBtn = document.getElementById('openSidebarBtn');
     const closeSidebarBtn = document.getElementById('closeSidebarBtn');
     const sidebar = document.getElementById('sidebar');
@@ -624,7 +630,427 @@ function renderCartItems() {
             });
         });
     });
-</script>
+</script> --}}
 {{-- add to cart end --}}
 
+{{-- js for add cart and add cart page --}}
+<script>
+      // আপনার সম্পূর্ণ JavaScript কোড এখানে পেস্ট করুন
+const openSidebarBtn = document.getElementById('openSidebarBtn');
+const closeSidebarBtn = document.getElementById('closeSidebarBtn');
+const sidebar = document.getElementById('sidebar');
+const itemCountSpan = document.getElementById('itemCount');
+const cartItemsContainer = document.getElementById('cartItemsContainer'); // Sidebar container
+const noProductsMessage = document.getElementById('noProductsMessage'); // Sidebar specific message
+const cartSubtotalSpan = document.getElementById('cartSubtotal'); // Sidebar specific subtotal
+const continueShoppingDiv = document.getElementById('continueShoppingDiv'); // Sidebar specific div
+
+let cart = [];
+
+function hideSidebar() {
+    if (sidebar) {
+        sidebar.classList.remove('translate-x-0');
+        sidebar.classList.add('translate-x-full');
+    }
+}
+
+function showSidebar() {
+    if (sidebar) {
+        sidebar.classList.remove('translate-x-full');
+        sidebar.classList.add('translate-x-0');
+    }
+}
+
+if (openSidebarBtn) {
+    openSidebarBtn.addEventListener('click', showSidebar);
+}
+if (closeSidebarBtn) {
+    closeSidebarBtn.addEventListener('click', hideSidebar);
+}
+
+document.addEventListener('click', (event) => {
+    if (sidebar && openSidebarBtn && !sidebar.contains(event.target) && !openSidebarBtn.contains(event.target) && sidebar.classList.contains('translate-x-0')) {
+        hideSidebar();
+    }
+});
+
+if (sidebar) {
+    sidebar.addEventListener('click', (event) => {
+        event.stopPropagation();
+    });
+}
+
+function loadCart() {
+    const storedCart = localStorage.getItem('easyBagCart');
+    if (storedCart) {
+        cart = JSON.parse(storedCart);
+        // Ensure all item IDs are integers upon loading, as a fallback
+        cart.forEach(item => {
+            item.id = parseInt(item.id);
+        });
+    }
+    updateCartUI();
+}
+
+function saveCart() {
+    localStorage.setItem('easyBagCart', JSON.stringify(cart));
+}
+
+function addToCart(product, quantity, size) {
+    // --- START DEBUGGING LOGS ---
+    console.log('addToCart: product.id BEFORE parseInt:', product.id, 'Type:', typeof product.id);
+    const parsedProductId = parseInt(product.id);
+    console.log('addToCart: product.id AFTER parseInt:', parsedProductId, 'Type:', typeof parsedProductId);
+    // --- END DEBUGGING LOGS ---
+
+    const cartItemId = `${parsedProductId}-${size}`; // Use parsedProductId here
+    const existingProductIndex = cart.findIndex(item => item.cartId === cartItemId);
+
+    if (existingProductIndex > -1) {
+        cart[existingProductIndex].quantity += quantity;
+    } else {
+        cart.push({
+            cartId: cartItemId,
+            id: parsedProductId, // Use the parsed ID here
+            name: product.name,
+            price: product.price,
+            image: product.image,
+            quantity: quantity,
+            size: size
+        });
+    }
+    saveCart();
+    updateCartUI();
+    if (sidebar) {
+        showSidebar();
+    }
+}
+
+function removeFromCart(cartItemId) {
+    cart = cart.filter(item => item.cartId !== cartItemId);
+    saveCart();
+    updateCartUI();
+}
+
+function updateQuantity(cartItemId, newQuantity) {
+    const item = cart.find(item => item.cartId === cartItemId);
+    if (item) {
+        item.quantity = Math.max(1, parseInt(newQuantity));
+        if (item.quantity <= 0) {
+            removeFromCart(cartItemId);
+        } else {
+            saveCart();
+            updateCartUI();
+        }
+    }
+}
+
+// Render cart items in the sidebar AND/OR main cart page
+function renderCartItems(targetContainerId, isMainCartPage = false) {
+    const targetContainer = document.getElementById(targetContainerId);
+    if (!targetContainer) return;
+
+    targetContainer.innerHTML = ''; // Clear previous items
+
+    if (cart.length === 0) {
+        // Only show "No products" message on the main cart page if it's the target
+        if (isMainCartPage) {
+            const noProductsDiv = document.createElement('div');
+            noProductsDiv.classList.add('text-center', 'py-8');
+            noProductsDiv.innerHTML = '<p class="text-gray-600 text-lg">Your cart is empty.</p><a href="/" class="mt-4 inline-block bg-gray-800 text-white px-6 py-3 rounded-md hover:bg-gray-700 transition">Continue Shopping</a>';
+            targetContainer.appendChild(noProductsDiv);
+
+            // Hide the cart totals section if no products on main cart page
+            const cartTotalsSection = document.getElementById('mainCartTotalsSection');
+            if (cartTotalsSection) {
+                cartTotalsSection.style.display = 'none';
+            }
+        } else {
+            // For sidebar: manage the specific noProductsMessage and continueShoppingDiv
+            if (noProductsMessage) noProductsMessage.style.display = 'block';
+            if (continueShoppingDiv) continueShoppingDiv.style.display = 'none';
+        }
+
+    } else {
+        // For sidebar: hide "No products" message
+        if (!isMainCartPage) {
+            if (noProductsMessage) noProductsMessage.style.display = 'none';
+            if (continueShoppingDiv) continueShoppingDiv.style.display = 'block';
+        }
+
+        // For main cart page: ensure totals section is visible
+        if (isMainCartPage) {
+            const cartTotalsSection = document.getElementById('mainCartTotalsSection');
+            if (cartTotalsSection) {
+                cartTotalsSection.style.display = 'flex'; // Changed to flex for desktop layout
+            }
+        }
+
+        cart.forEach(item => {
+            let itemHtml = '';
+            if (isMainCartPage) {
+                // for cart page
+                    itemHtml = `
+                    <div class="grid grid-cols-1 md:grid-cols-5 gap-4 items-center border-b pb-4 mb-4 relative">
+                        <div class="flex items-center col-span-2">
+                            <img src="${item.image}" alt="${item.name}" class="w-20 h-20 object-cover mr-4 border border-gray-200" />
+                            <div>
+                                <div class="font-semibold text-gray-800 text-base">${item.name}</div>
+                                <div class="text-gray-600 text-sm">Size: ${item.size || 'N/A'}</div>
+                            </div>
+                        </div>
+                        <div class="text-gray-800 text-base font-medium">৳${item.price.toLocaleString()}</div>
+                        <div class="flex items-center justify-center border border-gray-300 rounded overflow-hidden w-28 mx-auto md:mx-0">
+                            <button class="cart-page-quantity-minus-btn px-2 py-1 bg-gray-100 text-gray-600 hover:bg-gray-200" data-cart-item-id="${item.cartId}">
+                                <span class="material-icons text-base">remove</span>
+                            </button>
+                            <input type="number" {{-- Changed to type="number" --}}
+                                class="w-12 text-center py-1 outline-none text-gray-800 text-base cart-page-quantity-input"
+                                value="${item.quantity}"
+                                min="1"
+                                data-cart-item-id="${item.cartId}"
+                                readonly />
+                            <button class="cart-page-quantity-plus-btn px-2 py-1 bg-gray-100 text-gray-600 hover:bg-gray-200" data-cart-item-id="${item.cartId}">
+                                <span class="material-icons text-base">add</span>
+                            </button>
+                        </div>
+                        <div class="text-gray-800 text-base font-medium text-right">৳${(item.price * item.quantity).toLocaleString()}</div>
+                       <button class="text-gray-400 hover:text-red-500 remove-item-btn ml-auto md:ml-0 md:absolute md:right-0 md:top-1/2 md:transform md:-translate-y-1/2" data-cart-item-id="${item.cartId}" style="right: -25px; /* Adjust this value as needed */">
+                            <span class="material-symbols-outlined text-xl">close</span>
+                        </button>
+                    </div>
+                `;
+                    } else {
+                        // HTML for the sidebar
+                        itemHtml = `
+                            <div class="flex items-start mb-4 border-b pb-4">
+                                <img src="${item.image}" alt="${item.name}" class="w-20 h-20 object-cover rounded-md mr-4 flex-shrink-0">
+                                <div class="flex-grow">
+                                    <h4 class="text-gray-800 font-semibold text-base">${item.name}</h4>
+                                    <p class="text-gray-600 text-xs mt-0.5">Size: ${item.size || 'N/A'}</p>
+                                    <div class="flex items-center mt-2">
+                                        <div class="flex items-center border border-gray-200 rounded-lg overflow-hidden shadow-sm">
+                                            <button class="sidebar-quantity-minus-btn flex items-center justify-center h-8 w-8 bg-gray-50 hover:bg-gray-100 text-gray-700 font-bold text-lg cursor-pointer transition duration-200" data-cart-item-id="${item.cartId}">-</button>
+                                            <input type="number"
+                                                class="w-12 h-8 text-center border-x border-gray-200 focus:outline-none sidebar-quantity-input text-gray-800 font-medium text-base"
+                                                value="${item.quantity}"
+                                                min="1"
+                                                data-cart-item-id="${item.cartId}"
+                                                readonly>
+                                            <button class="sidebar-quantity-plus-btn flex items-center justify-center h-8 w-8 bg-gray-50 hover:bg-gray-100 text-gray-700 font-bold text-lg cursor-pointer transition duration-200" data-cart-item-id="${item.cartId}">+</button>
+                                        </div>
+                                        <span class="ml-3 text-gray-900 font-semibold text-base">৳ ${(item.price * item.quantity).toLocaleString()}</span>
+                                    </div>
+                                </div>
+                                <button class="text-gray-400 hover:text-red-500 remove-item-btn ml-auto flex-shrink-0" data-cart-item-id="${item.cartId}">
+                                    <span class="material-symbols-outlined text-xl">close</span>
+                                </button>
+                            </div>
+                        `;
+                    }
+            targetContainer.insertAdjacentHTML('beforeend', itemHtml);
+        });
+    }
+}
+
+function updateCartUI() {
+    // Render for sidebar
+    renderCartItems('cartItemsContainer', false);
+
+    // Render for main cart page (if #mainCartItemsContainer exists)
+    const mainCartContainer = document.getElementById('mainCartItemsContainer');
+    if (mainCartContainer) {
+        renderCartItems('mainCartItemsContainer', true);
+    }
+
+    let totalItems = 0;
+    let subtotal = 0;
+
+    cart.forEach(item => {
+        totalItems += item.quantity;
+        subtotal += item.quantity * item.price;
+    });
+
+    if (itemCountSpan) {
+        itemCountSpan.textContent = totalItems;
+    }
+    if (cartSubtotalSpan) {
+        cartSubtotalSpan.textContent = `৳ ${subtotal.toLocaleString()}`;
+    }
+
+    // Update main cart page subtotals and totals
+    const mainCartSubtotalSpan = document.getElementById('mainCartSubtotal');
+    if (mainCartSubtotalSpan) {
+        mainCartSubtotalSpan.textContent = `৳ ${subtotal.toLocaleString()}`;
+    }
+    const mainCartTotalSpan = document.getElementById('mainCartTotal');
+    if (mainCartTotalSpan) {
+        mainCartTotalSpan.textContent = `৳ ${subtotal.toLocaleString()}`;
+    }
+
+    // Add event listeners to newly rendered items (for both sidebar and main cart page)
+    document.querySelectorAll('.remove-item-btn').forEach(button => {
+        button.addEventListener('click', (event) => {
+            const cartItemId = event.currentTarget.dataset.cartItemId;
+            removeFromCart(cartItemId);
+        });
+    });
+
+    document.querySelectorAll('.sidebar-quantity-minus-btn, .cart-page-quantity-minus-btn').forEach(button => {
+        button.addEventListener('click', (event) => {
+            const cartItemId = event.currentTarget.dataset.cartItemId;
+            const currentItem = cart.find(item => item.cartId === cartItemId);
+            if (currentItem && currentItem.quantity > 1) {
+                updateQuantity(cartItemId, currentItem.quantity - 1);
+            } else if (currentItem && currentItem.quantity === 1) {
+                removeFromCart(cartItemId);
+            }
+        });
+    });
+
+    document.querySelectorAll('.sidebar-quantity-plus-btn, .cart-page-quantity-plus-btn').forEach(button => {
+        button.addEventListener('click', (event) => {
+            const cartItemId = event.currentTarget.dataset.cartItemId;
+            const currentItem = cart.find(item => item.cartId === cartItemId);
+            if (currentItem) {
+                updateQuantity(cartItemId, currentItem.quantity + 1);
+            }
+        });
+    });
+
+    document.querySelectorAll('.sidebar-quantity-input, .cart-page-quantity-input').forEach(input => {
+        input.addEventListener('change', (event) => {
+            const cartItemId = event.currentTarget.dataset.cartItemId;
+            const newQuantity = parseInt(event.currentTarget.value);
+            updateQuantity(cartItemId, newQuantity);
+        });
+    });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    loadCart();
+
+    // Product page/modal quantity buttons (if present)
+    document.querySelectorAll('.quantity-minus-btn').forEach(button => {
+        button.addEventListener('click', (event) => {
+            const input = event.target.nextElementSibling;
+            let currentValue = parseInt(input.value);
+            if (currentValue > 1) {
+                input.value = currentValue - 1;
+            }
+        });
+    });
+
+    document.querySelectorAll('.quantity-plus-btn').forEach(button => {
+        button.addEventListener('click', (event) => {
+            const input = event.target.previousElementSibling;
+            let currentValue = parseInt(input.value);
+            input.value = currentValue + 1;
+        });
+    });
+
+    document.querySelectorAll('.add-to-cart-btn').forEach(button => {
+        button.addEventListener('click', (event) => {
+            const parentElement = event.currentTarget.closest('.product-card') || event.currentTarget.closest('.product-options-modal');
+
+            if (!parentElement) {
+                console.error("Parent element not found for add to cart button.");
+                return;
+            }
+
+            // Ensure productId is treated as a string before passing to parseInt() if it came from dataset
+            const productId = event.currentTarget.dataset.productId;
+            const productName = event.currentTarget.dataset.productName;
+            const productPrice = parseFloat(event.currentTarget.dataset.productPrice);
+            const productImage = event.currentTarget.dataset.productImage;
+
+            const quantityInput = parentElement.querySelector('.quantity-input');
+            const quantity = parseInt(quantityInput.value);
+
+            const sizeSelect = parentElement.querySelector('.product-size-select');
+            const selectedSize = sizeSelect ? sizeSelect.value : '';
+
+            // Using custom message box instead of alert()
+            if (sizeSelect && sizeSelect.options.length > 1 && selectedSize === "") {
+                const messageBoxOverlay = document.createElement('div');
+                messageBoxOverlay.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+                messageBoxOverlay.innerHTML = `
+                    <div class="bg-white p-6 rounded-lg shadow-xl max-w-sm w-full mx-4 text-center">
+                        <p class="text-gray-800 text-lg mb-4">Please select a size before adding to cart.</p>
+                        <button id="alertCloseBtn" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md focus:outline-none focus:shadow-outline">
+                            OK
+                        </button>
+                    </div>
+                `;
+                document.body.appendChild(messageBoxOverlay);
+                document.getElementById('alertCloseBtn').addEventListener('click', () => {
+                    document.body.removeChild(messageBoxOverlay);
+                });
+                messageBoxOverlay.addEventListener('click', (e) => {
+                    if (e.target === messageBoxOverlay) {
+                        document.body.removeChild(messageBoxOverlay);
+                    }
+                });
+                return;
+            }
+
+            const product = {
+                id: productId, // Pass the string productId here; parseInt will happen in addToCart
+                name: productName,
+                price: productPrice,
+                image: productImage
+            };
+            addToCart(product, quantity, selectedSize);
+
+            const modal = event.currentTarget.closest('.product-options-modal');
+            if (modal) {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }
+        });
+    });
+
+    document.querySelectorAll('.select-options-btn').forEach(button => {
+        button.addEventListener('click', (event) => {
+            const modalId = button.dataset.modalTarget;
+            const modal = document.getElementById(modalId);
+
+            if (modal) {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+            } else {
+                console.error(`Modal with ID '${modalId}' not found.`);
+            }
+        });
+    });
+
+    document.querySelectorAll('.close-modal-btn').forEach(button => {
+        button.addEventListener('click', (event) => {
+            const modal = event.currentTarget.closest('.product-options-modal');
+            if (modal) {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }
+        });
+    });
+
+    document.addEventListener('click', (event) => {
+        document.querySelectorAll('.product-options-modal').forEach(modal => {
+            const selectOptionsBtn = modal.closest('.product-card') ? modal.closest('.product-card').querySelector('.select-options-btn') : null;
+
+            if (selectOptionsBtn && !modal.contains(event.target) && !selectOptionsBtn.contains(event.target) && !modal.classList.contains('hidden')) {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }
+        });
+    });
+
+    document.querySelectorAll('.product-options-modal').forEach(modal => {
+        modal.addEventListener('click', (event) => {
+            event.stopPropagation();
+        });
+    });
+});
+
+    </script>
 @endpush
