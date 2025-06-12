@@ -161,62 +161,81 @@
     </div>
 </nav>
 @push('scripts')
-{{-- wish list  --}}
-    <script>
-        const wishlist = new Set();
+{{-- wish list --}}
+<script>
+    // এই Set টি ট্র্যাক করে কোন item.id গুলো wishlist এ আছে
+    // এটি localStorage থেকে লোড করা হবে এবং runtime এ আপডেট হবে।
+    const wishlist = new Set();
 
-        function handleWishlistClick(btn) {
-            const itemId = btn.dataset.id;
-            const icon = btn.querySelector(".material-symbols-outlined");
+    // handleWishlistClick ফাংশন: যখন কোনো উইশলিস্ট বাটন ক্লিক করা হয়
+    function handleWishlistClick(btn) {
+        const itemId = btn.dataset.id;
+        const icon = btn.querySelector(".material-symbols-outlined");
 
-            const item = {
-                id: itemId,
-                name: btn.dataset.name,
-                price: parseFloat(btn.dataset.price),
-                imageUrl: btn.dataset.image
-            };
+        // আইটেমের বিস্তারিত তথ্য সংগ্রহ করুন
+        const item = {
+            id: itemId,
+            name: btn.dataset.name,
+            price: parseFloat(btn.dataset.price),
+            imageUrl: btn.dataset.image
+        };
 
-            if (wishlist.has(itemId)) {
-                return;
+        // যদি আইটেমটি ইতিমধ্যেই উইশলিস্টে থাকে
+        if (wishlist.has(itemId)) {
+            // আইকনটি যদি filled না থাকে, তাহলে filled করে দিন
+            if (icon && !icon.classList.contains("filled")) {
+                icon.classList.add("filled");
             }
-
-            wishlist.add(itemId);
-            icon.classList.add("filled");
-            addToWishlist(item);
+            return; // ফাংশন থেকে বেরিয়ে যান, কারণ এটি Already Added
         }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            const wishlistButton = document.getElementById('wishlistButton');
-            const wishlistPopup = document.getElementById('wishlistPopup');
-            const wishlistCountSpan = document.getElementById('wishlistCount');
-            const wishlistCountBadge = document.getElementById('wishlistCountBadge');
-            const emptyWishlistMessage = document.getElementById('emptyWishlistMessage');
-            const wishlistItemsContainer = document.getElementById('wishlistItems');
+        // যদি আইটেমটি উইশলিস্টে না থাকে, তাহলে যোগ করুন
+        wishlist.add(itemId);
+        if (icon) { // নিশ্চিত করুন icon এলিমেন্টটি আছে
+            icon.classList.add("filled");
+        }
+        addToWishlist(item); // গ্লোবাল addToWishlist ফাংশন কল করুন
+    }
 
-            let wishlistItems = JSON.parse(localStorage.getItem('wishlistItems')) || [];
+    document.addEventListener('DOMContentLoaded', () => {
+        // উইশলিস্ট পপআপ এবং কাউন্টার সম্পর্কিত DOM উপাদানগুলো
+        const wishlistButton = document.getElementById('wishlistButton'); // আপনার মেইন উইশলিস্ট আইকনের বাটন
+        const wishlistPopup = document.getElementById('wishlistPopup');
+        const wishlistCountSpan = document.getElementById('wishlistCount');
+        const wishlistCountBadge = document.getElementById('wishlistCountBadge');
+        const emptyWishlistMessage = document.getElementById('emptyWishlistMessage');
+        const wishlistItemsContainer = document.getElementById('wishlistItems');
 
-            function saveToLocalStorage() {
-                localStorage.setItem('wishlistItems', JSON.stringify(wishlistItems));
-            }
+        // localStorage থেকে উইশলিস্ট আইটেম লোড করুন
+        let wishlistItems = JSON.parse(localStorage.getItem('wishlistItems')) || [];
 
-            function updateWishlistDisplay() {
-                wishlistItemsContainer.innerHTML = '';
-                const count = wishlistItems.length;
-                wishlistCountSpan.textContent = count;
-                wishlistCountBadge.textContent = count;
+        // localStorage এ উইশলিস্ট আইটেম সেভ করার ফাংশন
+        function saveToLocalStorage() {
+            localStorage.setItem('wishlistItems', JSON.stringify(wishlistItems));
+        }
 
-                if (count === 0) {
-                    emptyWishlistMessage.classList.remove('hidden');
-                    wishlistItemsContainer.classList.add('hidden');
-                } else {
-                    emptyWishlistMessage.classList.add('hidden');
-                    wishlistItemsContainer.classList.remove('hidden');
+        // উইশলিস্ট ডিসপ্লে (পপআপের ভেতরের তালিকা এবং কাউন্টার) আপডেট করার ফাংশন
+        function updateWishlistDisplay() {
+            // পপআপের ভেতরের আইটেম তালিকা পরিষ্কার করুন
+            wishlistItemsContainer.innerHTML = '';
+            const count = wishlistItems.length;
+            wishlistCountSpan.textContent = count;
+            wishlistCountBadge.textContent = count;
 
-                    wishlistItems.forEach((item, index) => {
-                        const itemDiv = document.createElement('div');
-                        itemDiv.className = 'flex items-center justify-between bg-gray-100 border p-2 rounded';
+            // যদি কোনো আইটেম না থাকে
+            if (count === 0) {
+                emptyWishlistMessage.classList.remove('hidden');
+                wishlistItemsContainer.classList.add('hidden');
+            } else {
+                emptyWishlistMessage.classList.add('hidden');
+                wishlistItemsContainer.classList.remove('hidden');
 
-                        itemDiv.innerHTML = `
+                // প্রতিটি আইটেমকে পপআপে যোগ করুন
+                wishlistItems.forEach((item, index) => {
+                    const itemDiv = document.createElement('div');
+                    itemDiv.className = 'flex items-center justify-between bg-gray-100 border p-2 rounded mb-2';
+
+                    itemDiv.innerHTML = `
                         <div class="flex items-center">
                             <img src="${item.imageUrl}" alt="${item.name}" class="w-12 h-12 mr-3 rounded">
                             <div>
@@ -226,72 +245,89 @@
                         </div>
                         <button class="remove-btn text-red-500 text-sm hover:underline" data-index="${index}">Remove</button>
                     `;
+                    wishlistItemsContainer.appendChild(itemDiv);
+                });
 
-                        wishlistItemsContainer.appendChild(itemDiv);
+                // রিমুভ বাটনের কার্যকারিতা যোগ করুন
+                document.querySelectorAll('.remove-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const index = e.target.getAttribute('data-index');
+                        const removedItem = wishlistItems[index];
+                        wishlistItems.splice(index, 1);
+                        wishlist.delete(removedItem.id); // Set থেকে আইটেম সরান
+
+                        saveToLocalStorage();
+                        updateWishlistDisplay(); // রিমুভ করার পর ডিসপ্লে এবং বাটনগুলো আপডেট করুন
                     });
-
-                    // Add remove functionality
-                    document.querySelectorAll('.remove-btn').forEach(btn => {
-                        btn.addEventListener('click', (e) => {
-                            const index = e.target.getAttribute('data-index');
-                            const removedItem = wishlistItems[index];
-                            wishlistItems.splice(index, 1);
-                            wishlist.delete(removedItem.id); // Remove from Set
-
-                            // Remove filled class from button
-                            const btnToUpdate = document.querySelector(`button[data-id="${removedItem.id}"]`);
-                            if (btnToUpdate) {
-                                const icon = btnToUpdate.querySelector(".material-symbols-outlined");
-                                icon.classList.remove("filled");
-                            }
-
-                            saveToLocalStorage();
-                            updateWishlistDisplay();
-                        });
-                    });
-                }
-
-                // Restore filled class for items in wishlist
-                wishlistItems.forEach(item => {
-                    wishlist.add(item.id);
-                    const btn = document.querySelector(`button[data-id="${item.id}"]`);
-                    if (btn) {
-                        const icon = btn.querySelector(".material-symbols-outlined");
-                        icon.classList.add("filled");
-                    }
                 });
             }
 
+            // --- এই অংশটি সব উইশলিস্ট বাটনগুলোর অবস্থা চেক করে আপডেট করবে ---
+            // এটি নিশ্চিত করবে যে পেজ লোড হওয়ার সময় বা অন্য কোনো আপডেটের সময়
+            // সকল `wishlist-button` (যেমন: প্রোডাক্ট কার্ড, কুইক ভিউ মডাল) তাদের সঠিক Filled/Unfilled অবস্থা দেখায়।
+            document.querySelectorAll('button.wishlist-button').forEach(btn => {
+                const itemId = btn.dataset.id;
+                const icon = btn.querySelector(".material-symbols-outlined");
+
+                if (icon) { // নিশ্চিত করুন icon এলিমেন্টটি বিদ্যমান
+                    if (wishlist.has(itemId)) {
+                        icon.classList.add("filled");
+                    } else {
+                        icon.classList.remove("filled");
+                    }
+                }
+            });
+            // --- আপডেট করা অংশ শেষ ---
+        }
+
+        // মেইন উইশলিস্ট বাটন এবং পপআপের ইভেন্ট লিসেনার
+        if (wishlistButton) {
             wishlistButton.addEventListener('click', (e) => {
                 e.stopPropagation();
-                wishlistPopup.classList.toggle('hidden');
-            });
-
-            document.addEventListener('click', (e) => {
-                if (!wishlistPopup.contains(e.target) && !wishlistButton.contains(e.target)) {
-                    wishlistPopup.classList.add('hidden');
-                }
-            });
-
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape') {
-                    wishlistPopup.classList.add('hidden');
-                }
-            });
-
-            // Global function to add item to wishlist
-            window.addToWishlist = function (item) {
-                const exists = wishlistItems.find(i => i.id === item.id);
-                if (!exists) {
-                    wishlistItems.push(item);
-                    saveToLocalStorage();
+                if (wishlistPopup) {
+                    wishlistPopup.classList.toggle('hidden');
+                    // পপআপ খোলার সময় উইশলিস্ট ডিসপ্লে এবং বাটনগুলো আপডেট করুন
                     updateWishlistDisplay();
                 }
-            }
+            });
+        }
 
-            updateWishlistDisplay();
+        // পপআপের বাইরে ক্লিক করলে বাটন বন্ধ করার লজিক
+        document.addEventListener('click', (e) => {
+            if (wishlistPopup && wishlistButton) {
+                // If click is outside popup AND not on wishlist button or its child
+                if (!wishlistPopup.contains(e.target) && !wishlistButton.contains(e.target) && !e.target.closest('.wishlist-button')) {
+                    wishlistPopup.classList.add('hidden');
+                }
+            }
         });
-    </script>
+
+        // 'Escape' চাপলে পপআপ বন্ধ করার লজিক
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && wishlistPopup && !wishlistPopup.classList.contains('hidden')) {
+                wishlistPopup.classList.add('hidden');
+            }
+        });
+
+        // Global function to add item to wishlist (handleWishlistClick এই ফাংশনটি ব্যবহার করে)
+        window.addToWishlist = function (item) {
+            // যদি আইটেমটি ইতিমধ্যেই local storage এ না থাকে, তবে যোগ করুন
+            const exists = wishlistItems.find(i => i.id === item.id);
+            if (!exists) {
+                wishlistItems.push(item);
+                saveToLocalStorage();
+            }
+            // আইটেম যোগ করার পর ডিসপ্লে এবং বাটনগুলো আপডেট করুন
+            updateWishlistDisplay();
+        }
+
+        // পেজ লোড হওয়ার সময় initial setup
+        // 1. localStorage থেকে লোড করা wishlistItems ব্যবহার করে wishlist Set পপুলেট করুন।
+        wishlistItems.forEach(item => wishlist.add(item.id));
+        // 2. উইশলিস্ট ডিসপ্লে এবং সকল বাটনগুলোর অবস্থা আপডেট করুন।
+        updateWishlistDisplay();
+    });
+</script>
 {{-- end wish list  --}}
 {{-- add to cart  --}}
 {{-- <script>
@@ -633,163 +669,165 @@ function renderCartItems() {
 </script> --}}
 {{-- add to cart end --}}
 
-{{-- js for add cart and add cart page --}}
-<script>
-      // আপনার সম্পূর্ণ JavaScript কোড এখানে পেস্ট করুন
-const openSidebarBtn = document.getElementById('openSidebarBtn');
-const closeSidebarBtn = document.getElementById('closeSidebarBtn');
-const sidebar = document.getElementById('sidebar');
-const itemCountSpan = document.getElementById('itemCount');
-const cartItemsContainer = document.getElementById('cartItemsContainer'); // Sidebar container
-const noProductsMessage = document.getElementById('noProductsMessage'); // Sidebar specific message
-const cartSubtotalSpan = document.getElementById('cartSubtotal'); // Sidebar specific subtotal
-const continueShoppingDiv = document.getElementById('continueShoppingDiv'); // Sidebar specific div
 
-let cart = [];
 
-function hideSidebar() {
-    if (sidebar) {
-        sidebar.classList.remove('translate-x-0');
-        sidebar.classList.add('translate-x-full');
+    {{-- js for add cart and cart page and quick view  --}}
+  <script>
+    // আপনার সম্পূর্ণ JavaScript কোড এখানে পেস্ট করুন
+    const openSidebarBtn = document.getElementById('openSidebarBtn');
+    const closeSidebarBtn = document.getElementById('closeSidebarBtn');
+    const sidebar = document.getElementById('sidebar');
+    const itemCountSpan = document.getElementById('itemCount');
+    const cartItemsContainer = document.getElementById('cartItemsContainer'); // Sidebar container
+    const noProductsMessage = document.getElementById('noProductsMessage'); // Sidebar specific message
+    const cartSubtotalSpan = document.getElementById('cartSubtotal'); // Sidebar specific subtotal
+    const continueShoppingDiv = document.getElementById('continueShoppingDiv'); // Sidebar specific div
+
+    let cart = [];
+
+    function hideSidebar() {
+        if (sidebar) {
+            sidebar.classList.remove('translate-x-0');
+            sidebar.classList.add('translate-x-full');
+        }
     }
-}
 
-function showSidebar() {
-    if (sidebar) {
-        sidebar.classList.remove('translate-x-full');
-        sidebar.classList.add('translate-x-0');
+    function showSidebar() {
+        if (sidebar) {
+            sidebar.classList.remove('translate-x-full');
+            sidebar.classList.add('translate-x-0');
+        }
     }
-}
 
-if (openSidebarBtn) {
-    openSidebarBtn.addEventListener('click', showSidebar);
-}
-if (closeSidebarBtn) {
-    closeSidebarBtn.addEventListener('click', hideSidebar);
-}
-
-document.addEventListener('click', (event) => {
-    if (sidebar && openSidebarBtn && !sidebar.contains(event.target) && !openSidebarBtn.contains(event.target) && sidebar.classList.contains('translate-x-0')) {
-        hideSidebar();
+    if (openSidebarBtn) {
+        openSidebarBtn.addEventListener('click', showSidebar);
     }
-});
+    if (closeSidebarBtn) {
+        closeSidebarBtn.addEventListener('click', hideSidebar);
+    }
 
-if (sidebar) {
-    sidebar.addEventListener('click', (event) => {
-        event.stopPropagation();
+    document.addEventListener('click', (event) => {
+        if (sidebar && openSidebarBtn && !sidebar.contains(event.target) && !openSidebarBtn.contains(event.target) && sidebar.classList.contains('translate-x-0')) {
+            hideSidebar();
+        }
     });
-}
 
-function loadCart() {
-    const storedCart = localStorage.getItem('easyBagCart');
-    if (storedCart) {
-        cart = JSON.parse(storedCart);
-        // Ensure all item IDs are integers upon loading, as a fallback
-        cart.forEach(item => {
-            item.id = parseInt(item.id);
-        });
-    }
-    updateCartUI();
-}
-
-function saveCart() {
-    localStorage.setItem('easyBagCart', JSON.stringify(cart));
-}
-
-function addToCart(product, quantity, size) {
-    // --- START DEBUGGING LOGS ---
-    console.log('addToCart: product.id BEFORE parseInt:', product.id, 'Type:', typeof product.id);
-    const parsedProductId = parseInt(product.id);
-    console.log('addToCart: product.id AFTER parseInt:', parsedProductId, 'Type:', typeof parsedProductId);
-    // --- END DEBUGGING LOGS ---
-
-    const cartItemId = `${parsedProductId}-${size}`; // Use parsedProductId here
-    const existingProductIndex = cart.findIndex(item => item.cartId === cartItemId);
-
-    if (existingProductIndex > -1) {
-        cart[existingProductIndex].quantity += quantity;
-    } else {
-        cart.push({
-            cartId: cartItemId,
-            id: parsedProductId, // Use the parsed ID here
-            name: product.name,
-            price: product.price,
-            image: product.image,
-            quantity: quantity,
-            size: size
-        });
-    }
-    saveCart();
-    updateCartUI();
     if (sidebar) {
-        showSidebar();
+        sidebar.addEventListener('click', (event) => {
+            event.stopPropagation();
+        });
     }
-}
 
-function removeFromCart(cartItemId) {
-    cart = cart.filter(item => item.cartId !== cartItemId);
-    saveCart();
-    updateCartUI();
-}
+    function loadCart() {
+        const storedCart = localStorage.getItem('easyBagCart');
+        if (storedCart) {
+            cart = JSON.parse(storedCart);
+            // Ensure all item IDs are integers upon loading, as a fallback
+            cart.forEach(item => {
+                item.id = parseInt(item.id);
+            });
+        }
+        updateCartUI();
+    }
 
-function updateQuantity(cartItemId, newQuantity) {
-    const item = cart.find(item => item.cartId === cartItemId);
-    if (item) {
-        item.quantity = Math.max(1, parseInt(newQuantity));
-        if (item.quantity <= 0) {
-            removeFromCart(cartItemId);
+    function saveCart() {
+        localStorage.setItem('easyBagCart', JSON.stringify(cart));
+    }
+
+    function addToCart(product, quantity, size) {
+        // --- START DEBUGGING LOGS ---
+        console.log('addToCart: product.id BEFORE parseInt:', product.id, 'Type:', typeof product.id);
+        const parsedProductId = parseInt(product.id);
+        console.log('addToCart: product.id AFTER parseInt:', parsedProductId, 'Type:', typeof parsedProductId);
+        // --- END DEBUGGING LOGS ---
+
+        const cartItemId = `${parsedProductId}-${size}`; // Use parsedProductId here
+        const existingProductIndex = cart.findIndex(item => item.cartId === cartItemId);
+
+        if (existingProductIndex > -1) {
+            cart[existingProductIndex].quantity += quantity;
         } else {
-            saveCart();
-            updateCartUI();
+            cart.push({
+                cartId: cartItemId,
+                id: parsedProductId, // Use the parsed ID here
+                name: product.name,
+                price: product.price,
+                image: product.image,
+                quantity: quantity,
+                size: size
+            });
+        }
+        saveCart();
+        updateCartUI();
+        if (sidebar) {
+            showSidebar();
         }
     }
-}
 
-// Render cart items in the sidebar AND/OR main cart page
-function renderCartItems(targetContainerId, isMainCartPage = false) {
-    const targetContainer = document.getElementById(targetContainerId);
-    if (!targetContainer) return;
+    function removeFromCart(cartItemId) {
+        cart = cart.filter(item => item.cartId !== cartItemId);
+        saveCart();
+        updateCartUI();
+    }
 
-    targetContainer.innerHTML = ''; // Clear previous items
-
-    if (cart.length === 0) {
-        // Only show "No products" message on the main cart page if it's the target
-        if (isMainCartPage) {
-            const noProductsDiv = document.createElement('div');
-            noProductsDiv.classList.add('text-center', 'py-8');
-            noProductsDiv.innerHTML = '<p class="text-gray-600 text-lg">Your cart is empty.</p><a href="/" class="mt-4 inline-block bg-gray-800 text-white px-6 py-3 rounded-md hover:bg-gray-700 transition">Continue Shopping</a>';
-            targetContainer.appendChild(noProductsDiv);
-
-            // Hide the cart totals section if no products on main cart page
-            const cartTotalsSection = document.getElementById('mainCartTotalsSection');
-            if (cartTotalsSection) {
-                cartTotalsSection.style.display = 'none';
-            }
-        } else {
-            // For sidebar: manage the specific noProductsMessage and continueShoppingDiv
-            if (noProductsMessage) noProductsMessage.style.display = 'block';
-            if (continueShoppingDiv) continueShoppingDiv.style.display = 'none';
-        }
-
-    } else {
-        // For sidebar: hide "No products" message
-        if (!isMainCartPage) {
-            if (noProductsMessage) noProductsMessage.style.display = 'none';
-            if (continueShoppingDiv) continueShoppingDiv.style.display = 'block';
-        }
-
-        // For main cart page: ensure totals section is visible
-        if (isMainCartPage) {
-            const cartTotalsSection = document.getElementById('mainCartTotalsSection');
-            if (cartTotalsSection) {
-                cartTotalsSection.style.display = 'flex'; // Changed to flex for desktop layout
+    function updateQuantity(cartItemId, newQuantity) {
+        const item = cart.find(item => item.cartId === cartItemId);
+        if (item) {
+            item.quantity = Math.max(1, parseInt(newQuantity));
+            if (item.quantity <= 0) {
+                removeFromCart(cartItemId);
+            } else {
+                saveCart();
+                updateCartUI();
             }
         }
+    }
 
-        cart.forEach(item => {
-            let itemHtml = '';
+    // Render cart items in the sidebar AND/OR main cart page
+    function renderCartItems(targetContainerId, isMainCartPage = false) {
+        const targetContainer = document.getElementById(targetContainerId);
+        if (!targetContainer) return;
+
+        targetContainer.innerHTML = ''; // Clear previous items
+
+        if (cart.length === 0) {
+            // Only show "No products" message on the main cart page if it's the target
             if (isMainCartPage) {
-                // for cart page
+                const noProductsDiv = document.createElement('div');
+                noProductsDiv.classList.add('text-center', 'py-8');
+                noProductsDiv.innerHTML = '<p class="text-gray-600 text-lg">Your cart is empty.</p><a href="/" class="mt-4 inline-block bg-gray-800 text-white px-6 py-3 rounded-md hover:bg-gray-700 transition">Continue Shopping</a>';
+                targetContainer.appendChild(noProductsDiv);
+
+                // Hide the cart totals section if no products on main cart page
+                const cartTotalsSection = document.getElementById('mainCartTotalsSection');
+                if (cartTotalsSection) {
+                    cartTotalsSection.style.display = 'none';
+                }
+            } else {
+                // For sidebar: manage the specific noProductsMessage and continueShoppingDiv
+                if (noProductsMessage) noProductsMessage.style.display = 'block';
+                if (continueShoppingDiv) continueShoppingDiv.style.display = 'none';
+            }
+
+        } else {
+            // For sidebar: hide "No products" message
+            if (!isMainCartPage) {
+                if (noProductsMessage) noProductsMessage.style.display = 'none';
+                if (continueShoppingDiv) continueShoppingDiv.style.display = 'block';
+            }
+
+            // For main cart page: ensure totals section is visible
+            if (isMainCartPage) {
+                const cartTotalsSection = document.getElementById('mainCartTotalsSection');
+                if (cartTotalsSection) {
+                    cartTotalsSection.style.display = 'flex'; // Changed to flex for desktop layout
+                }
+            }
+
+            cart.forEach(item => {
+                let itemHtml = '';
+                if (isMainCartPage) {
+                    // for cart page
                     itemHtml = `
                     <div class="grid grid-cols-1 md:grid-cols-5 gap-4 items-center border-b pb-4 mb-4 relative">
                         <div class="flex items-center col-span-2">
@@ -804,7 +842,7 @@ function renderCartItems(targetContainerId, isMainCartPage = false) {
                             <button class="cart-page-quantity-minus-btn px-2 py-1 bg-gray-100 text-gray-600 hover:bg-gray-200" data-cart-item-id="${item.cartId}">
                                 <span class="material-icons text-base">remove</span>
                             </button>
-                            <input type="number" {{-- Changed to type="number" --}}
+                            <input type="number"
                                 class="w-12 text-center py-1 outline-none text-gray-800 text-base cart-page-quantity-input"
                                 value="${item.quantity}"
                                 min="1"
@@ -820,237 +858,391 @@ function renderCartItems(targetContainerId, isMainCartPage = false) {
                         </button>
                     </div>
                 `;
-                    } else {
-                        // HTML for the sidebar
-                        itemHtml = `
-                            <div class="flex items-start mb-4 border-b pb-4">
-                                <img src="${item.image}" alt="${item.name}" class="w-20 h-20 object-cover rounded-md mr-4 flex-shrink-0">
-                                <div class="flex-grow">
-                                    <h4 class="text-gray-800 font-semibold text-base">${item.name}</h4>
-                                    <p class="text-gray-600 text-xs mt-0.5">Size: ${item.size || 'N/A'}</p>
-                                    <div class="flex items-center mt-2">
-                                        <div class="flex items-center border border-gray-200 rounded-lg overflow-hidden shadow-sm">
-                                            <button class="sidebar-quantity-minus-btn flex items-center justify-center h-8 w-8 bg-gray-50 hover:bg-gray-100 text-gray-700 font-bold text-lg cursor-pointer transition duration-200" data-cart-item-id="${item.cartId}">-</button>
-                                            <input type="number"
-                                                class="w-12 h-8 text-center border-x border-gray-200 focus:outline-none sidebar-quantity-input text-gray-800 font-medium text-base"
-                                                value="${item.quantity}"
-                                                min="1"
-                                                data-cart-item-id="${item.cartId}"
-                                                readonly>
-                                            <button class="sidebar-quantity-plus-btn flex items-center justify-center h-8 w-8 bg-gray-50 hover:bg-gray-100 text-gray-700 font-bold text-lg cursor-pointer transition duration-200" data-cart-item-id="${item.cartId}">+</button>
-                                        </div>
-                                        <span class="ml-3 text-gray-900 font-semibold text-base">৳ ${(item.price * item.quantity).toLocaleString()}</span>
+                } else {
+                    // HTML for the sidebar
+                    itemHtml = `
+                        <div class="flex items-start mb-4 border-b pb-4">
+                            <img src="${item.image}" alt="${item.name}" class="w-20 h-20 object-cover rounded-md mr-4 flex-shrink-0">
+                            <div class="flex-grow">
+                                <h4 class="text-gray-800 font-semibold text-base">${item.name}</h4>
+                                <p class="text-gray-600 text-xs mt-0.5">Size: ${item.size || 'N/A'}</p>
+                                <div class="flex items-center mt-2">
+                                    <div class="flex items-center border border-gray-200 rounded-lg overflow-hidden shadow-sm">
+                                        <button class="sidebar-quantity-minus-btn flex items-center justify-center h-8 w-8 bg-gray-50 hover:bg-gray-100 text-gray-700 font-bold text-lg cursor-pointer transition duration-200" data-cart-item-id="${item.cartId}">-</button>
+                                        <input type="number"
+                                            class="w-12 h-8 text-center border-x border-gray-200 focus:outline-none sidebar-quantity-input text-gray-800 font-medium text-base"
+                                            value="${item.quantity}"
+                                            min="1"
+                                            data-cart-item-id="${item.cartId}"
+                                            readonly>
+                                        <button class="sidebar-quantity-plus-btn flex items-center justify-center h-8 w-8 bg-gray-50 hover:bg-gray-100 text-gray-700 font-bold text-lg cursor-pointer transition duration-200" data-cart-item-id="${item.cartId}">+</button>
                                     </div>
+                                    <span class="ml-3 text-gray-900 font-semibold text-base">৳ ${(item.price * item.quantity).toLocaleString()}</span>
                                 </div>
-                                <button class="text-gray-400 hover:text-red-500 remove-item-btn ml-auto flex-shrink-0" data-cart-item-id="${item.cartId}">
-                                    <span class="material-symbols-outlined text-xl">close</span>
-                                </button>
                             </div>
-                        `;
-                    }
-            targetContainer.insertAdjacentHTML('beforeend', itemHtml);
+                            <button class="text-gray-400 hover:text-red-500 remove-item-btn ml-auto flex-shrink-0" data-cart-item-id="${item.cartId}">
+                                <span class="material-symbols-outlined text-xl">close</span>
+                            </button>
+                        </div>
+                    `;
+                }
+                targetContainer.insertAdjacentHTML('beforeend', itemHtml);
+            });
+        }
+    }
+
+    function updateCartUI() {
+        // Render for sidebar
+        renderCartItems('cartItemsContainer', false);
+
+        // Render for main cart page (if #mainCartItemsContainer exists)
+        const mainCartContainer = document.getElementById('mainCartItemsContainer');
+        if (mainCartContainer) {
+            renderCartItems('mainCartItemsContainer', true);
+        }
+
+        let totalItems = 0;
+        let subtotal = 0;
+
+        cart.forEach(item => {
+            totalItems += item.quantity;
+            subtotal += item.quantity * item.price;
         });
-    }
-}
 
-function updateCartUI() {
-    // Render for sidebar
-    renderCartItems('cartItemsContainer', false);
+        if (itemCountSpan) {
+            itemCountSpan.textContent = totalItems;
+        }
+        if (cartSubtotalSpan) {
+            cartSubtotalSpan.textContent = `৳ ${subtotal.toLocaleString()}`;
+        }
 
-    // Render for main cart page (if #mainCartItemsContainer exists)
-    const mainCartContainer = document.getElementById('mainCartItemsContainer');
-    if (mainCartContainer) {
-        renderCartItems('mainCartItemsContainer', true);
-    }
+        // Update main cart page subtotals and totals
+        const mainCartSubtotalSpan = document.getElementById('mainCartSubtotal');
+        if (mainCartSubtotalSpan) {
+            mainCartSubtotalSpan.textContent = `৳ ${subtotal.toLocaleString()}`;
+        }
+        const mainCartTotalSpan = document.getElementById('mainCartTotal');
+        if (mainCartTotalSpan) {
+            mainCartTotalSpan.textContent = `৳ ${subtotal.toLocaleString()}`;
+        }
 
-    let totalItems = 0;
-    let subtotal = 0;
-
-    cart.forEach(item => {
-        totalItems += item.quantity;
-        subtotal += item.quantity * item.price;
-    });
-
-    if (itemCountSpan) {
-        itemCountSpan.textContent = totalItems;
-    }
-    if (cartSubtotalSpan) {
-        cartSubtotalSpan.textContent = `৳ ${subtotal.toLocaleString()}`;
-    }
-
-    // Update main cart page subtotals and totals
-    const mainCartSubtotalSpan = document.getElementById('mainCartSubtotal');
-    if (mainCartSubtotalSpan) {
-        mainCartSubtotalSpan.textContent = `৳ ${subtotal.toLocaleString()}`;
-    }
-    const mainCartTotalSpan = document.getElementById('mainCartTotal');
-    if (mainCartTotalSpan) {
-        mainCartTotalSpan.textContent = `৳ ${subtotal.toLocaleString()}`;
-    }
-
-    // Add event listeners to newly rendered items (for both sidebar and main cart page)
-    document.querySelectorAll('.remove-item-btn').forEach(button => {
-        button.addEventListener('click', (event) => {
-            const cartItemId = event.currentTarget.dataset.cartItemId;
-            removeFromCart(cartItemId);
-        });
-    });
-
-    document.querySelectorAll('.sidebar-quantity-minus-btn, .cart-page-quantity-minus-btn').forEach(button => {
-        button.addEventListener('click', (event) => {
-            const cartItemId = event.currentTarget.dataset.cartItemId;
-            const currentItem = cart.find(item => item.cartId === cartItemId);
-            if (currentItem && currentItem.quantity > 1) {
-                updateQuantity(cartItemId, currentItem.quantity - 1);
-            } else if (currentItem && currentItem.quantity === 1) {
+        // Add event listeners to newly rendered items (for both sidebar and main cart page)
+        document.querySelectorAll('.remove-item-btn').forEach(button => {
+            button.addEventListener('click', (event) => {
+                const cartItemId = event.currentTarget.dataset.cartItemId;
                 removeFromCart(cartItemId);
-            }
+            });
         });
+
+        document.querySelectorAll('.sidebar-quantity-minus-btn, .cart-page-quantity-minus-btn').forEach(button => {
+            button.addEventListener('click', (event) => {
+                const cartItemId = event.currentTarget.dataset.cartItemId;
+                const currentItem = cart.find(item => item.cartId === cartItemId);
+                if (currentItem && currentItem.quantity > 1) {
+                    updateQuantity(cartItemId, currentItem.quantity - 1);
+                } else if (currentItem && currentItem.quantity === 1) {
+                    removeFromCart(cartItemId);
+                }
+            });
+        });
+
+        document.querySelectorAll('.sidebar-quantity-plus-btn, .cart-page-quantity-plus-btn').forEach(button => {
+            button.addEventListener('click', (event) => {
+                const cartItemId = event.currentTarget.dataset.cartItemId;
+                const currentItem = cart.find(item => item.cartId === cartItemId);
+                if (currentItem) {
+                    updateQuantity(cartItemId, currentItem.quantity + 1);
+                }
+            });
+        });
+
+        document.querySelectorAll('.sidebar-quantity-input, .cart-page-quantity-input').forEach(input => {
+            input.addEventListener('change', (event) => {
+                const cartItemId = event.currentTarget.dataset.cartItemId;
+                const newQuantity = parseInt(event.currentTarget.value);
+                updateQuantity(cartItemId, newQuantity);
+            });
+        });
+    }
+
+    // --- Quick View Modal related variables and functions ---
+    const quickviewModal = document.getElementById('quickview-modal');
+    const quickviewImage = document.getElementById('quickview-product-image');
+    const quickviewName = document.getElementById('quickview-product-name');
+    const quickviewPrice = document.getElementById('quickview-product-price');
+    const quickviewSizeSelect = document.getElementById('quickview-size-select');
+    const quickviewQuantityInput = document.getElementById('quickview-quantity-input');
+    const quickviewMinusBtn = document.getElementById('quickview-quantity-minus-btn');
+    const quickviewPlusBtn = document.getElementById('quickview-quantity-plus-btn');
+    const quickviewAddToCartBtn = document.getElementById('quickview-add-to-cart-btn');
+    const quickviewWishlistBtn = document.getElementById('quickview-wishlist-button');
+    const quickviewCloseBtn = document.getElementById('quickview-close-btn');
+    const quickviewSizeContainer = document.getElementById('quickview-size-container');
+
+
+    window.openQuickviewModal = function(productData) {
+        if (!quickviewModal) {
+            console.error('Quick View Modal element not found!');
+            return;
+        }
+
+        // Populate modal with product data
+        quickviewImage.src = productData.image;
+        quickviewImage.alt = productData.name;
+        quickviewName.textContent = productData.name;
+        quickviewPrice.textContent = `৳${parseFloat(productData.price).toLocaleString()}`;
+        quickviewQuantityInput.value = 1; // Reset quantity to 1
+
+        // Clear previous sizes
+        quickviewSizeSelect.innerHTML = '';
+
+        // Populate sizes if available
+        if (productData.sizes && productData.sizes.length > 0) {
+            quickviewSizeContainer.style.display = 'block'; // Show size container
+            const defaultOption = document.createElement('option');
+            defaultOption.value = '';
+            defaultOption.textContent = 'Select Size';
+            defaultOption.disabled = true;
+            defaultOption.selected = true;
+            quickviewSizeSelect.appendChild(defaultOption);
+
+            productData.sizes.forEach(size => {
+                const option = document.createElement('option');
+                option.value = size;
+                option.textContent = size;
+                quickviewSizeSelect.appendChild(option);
+            });
+        } else {
+            quickviewSizeContainer.style.display = 'none'; // Hide size container if no sizes
+        }
+
+        // Set data attributes for Add to Cart and Wishlist buttons inside the modal
+        quickviewAddToCartBtn.dataset.productId = productData.id;
+        quickviewAddToCartBtn.dataset.productName = productData.name;
+        quickviewAddToCartBtn.dataset.productPrice = productData.price;
+        quickviewAddToCartBtn.dataset.productImage = productData.image;
+
+        quickviewWishlistBtn.dataset.id = productData.id;
+        quickviewWishlistBtn.dataset.name = productData.name;
+        quickviewWishlistBtn.dataset.price = productData.price;
+        quickviewWishlistBtn.dataset.image = productData.image;
+
+        // Show the modal
+        quickviewModal.classList.remove('hidden');
+        quickviewModal.classList.add('flex');
+    };
+
+    document.addEventListener('DOMContentLoaded', () => {
+        loadCart();
+
+        // Product page/modal quantity buttons (if present)
+        // These are for the main product page or other modals, not quickview modal specific
+        document.querySelectorAll('.quantity-minus-btn').forEach(button => {
+            button.addEventListener('click', (event) => {
+                const input = event.target.nextElementSibling;
+                let currentValue = parseInt(input.value);
+                if (currentValue > 1) {
+                    input.value = currentValue - 1;
+                }
+            });
+        });
+
+        document.querySelectorAll('.quantity-plus-btn').forEach(button => {
+            button.addEventListener('click', (event) => {
+                const input = event.target.previousElementSibling;
+                let currentValue = parseInt(input.value);
+                input.value = currentValue + 1;
+            });
+        });
+
+        // Add to Cart button logic for product cards and quick view modal
+        document.querySelectorAll('.add-to-cart-btn').forEach(button => {
+            button.addEventListener('click', (event) => {
+                // Determine if the button is inside a quick view modal or a regular product card
+                const isInsideQuickviewModal = event.currentTarget.closest('#quickview-modal');
+                const parentElement = isInsideQuickviewModal ? quickviewModal : (event.currentTarget.closest('.product-card') || event.currentTarget.closest('.product-options-modal'));
+
+                if (!parentElement) {
+                    console.error("Parent element not found for add to cart button.");
+                    return;
+                }
+
+                const productId = event.currentTarget.dataset.productId;
+                const productName = event.currentTarget.dataset.productName;
+                const productPrice = parseFloat(event.currentTarget.dataset.productPrice);
+                const productImage = event.currentTarget.dataset.productImage;
+
+                // For quickview modal, use the quickview-specific quantity and size inputs
+                const quantityInput = isInsideQuickviewModal ? quickviewQuantityInput : parentElement.querySelector('.quantity-input');
+                const quantity = parseInt(quantityInput.value);
+
+                // For quickview modal, use the quickview-specific size select
+                const sizeSelect = isInsideQuickviewModal ? quickviewSizeSelect : parentElement.querySelector('.product-size-select');
+                const selectedSize = sizeSelect ? sizeSelect.value : '';
+
+                // Only show alert if a size selection is mandatory and not made
+           if (sizeSelect && sizeSelect.style.display !== 'none' && sizeSelect.options.length > 1 && selectedSize === "") {
+    const messageBoxOverlay = document.createElement('div');
+    messageBoxOverlay.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[9999]';
+    messageBoxOverlay.innerHTML = `
+        <div class="bg-white p-6 rounded-lg shadow-xl max-w-sm w-full mx-4 text-center">
+            <p class="text-gray-800 text-lg mb-4">Please select a size before adding to cart.</p>
+            <button id="alertCloseBtn" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md focus:outline-none focus:shadow-outline">
+                OK
+            </button>
+        </div>
+    `;
+
+    // Append to end of body
+    document.body.appendChild(messageBoxOverlay);
+
+    // Close on button click
+    document.getElementById('alertCloseBtn').addEventListener('click', () => {
+        document.body.removeChild(messageBoxOverlay);
     });
 
-    document.querySelectorAll('.sidebar-quantity-plus-btn, .cart-page-quantity-plus-btn').forEach(button => {
-        button.addEventListener('click', (event) => {
-            const cartItemId = event.currentTarget.dataset.cartItemId;
-            const currentItem = cart.find(item => item.cartId === cartItemId);
-            if (currentItem) {
-                updateQuantity(cartItemId, currentItem.quantity + 1);
-            }
-        });
+    // Close on overlay click
+    messageBoxOverlay.addEventListener('click', (e) => {
+        if (e.target === messageBoxOverlay) {
+            document.body.removeChild(messageBoxOverlay);
+        }
     });
 
-    document.querySelectorAll('.sidebar-quantity-input, .cart-page-quantity-input').forEach(input => {
-        input.addEventListener('change', (event) => {
-            const cartItemId = event.currentTarget.dataset.cartItemId;
-            const newQuantity = parseInt(event.currentTarget.value);
-            updateQuantity(cartItemId, newQuantity);
-        });
-    });
+    return;
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    loadCart();
 
-    // Product page/modal quantity buttons (if present)
-    document.querySelectorAll('.quantity-minus-btn').forEach(button => {
-        button.addEventListener('click', (event) => {
-            const input = event.target.nextElementSibling;
-            let currentValue = parseInt(input.value);
-            if (currentValue > 1) {
-                input.value = currentValue - 1;
-            }
-        });
-    });
+                const product = {
+                    id: productId,
+                    name: productName,
+                    price: productPrice,
+                    image: productImage
+                };
+                addToCart(product, quantity, selectedSize);
 
-    document.querySelectorAll('.quantity-plus-btn').forEach(button => {
-        button.addEventListener('click', (event) => {
-            const input = event.target.previousElementSibling;
-            let currentValue = parseInt(input.value);
-            input.value = currentValue + 1;
-        });
-    });
-
-    document.querySelectorAll('.add-to-cart-btn').forEach(button => {
-        button.addEventListener('click', (event) => {
-            const parentElement = event.currentTarget.closest('.product-card') || event.currentTarget.closest('.product-options-modal');
-
-            if (!parentElement) {
-                console.error("Parent element not found for add to cart button.");
-                return;
-            }
-
-            // Ensure productId is treated as a string before passing to parseInt() if it came from dataset
-            const productId = event.currentTarget.dataset.productId;
-            const productName = event.currentTarget.dataset.productName;
-            const productPrice = parseFloat(event.currentTarget.dataset.productPrice);
-            const productImage = event.currentTarget.dataset.productImage;
-
-            const quantityInput = parentElement.querySelector('.quantity-input');
-            const quantity = parseInt(quantityInput.value);
-
-            const sizeSelect = parentElement.querySelector('.product-size-select');
-            const selectedSize = sizeSelect ? sizeSelect.value : '';
-
-            // Using custom message box instead of alert()
-            if (sizeSelect && sizeSelect.options.length > 1 && selectedSize === "") {
-                const messageBoxOverlay = document.createElement('div');
-                messageBoxOverlay.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
-                messageBoxOverlay.innerHTML = `
-                    <div class="bg-white p-6 rounded-lg shadow-xl max-w-sm w-full mx-4 text-center">
-                        <p class="text-gray-800 text-lg mb-4">Please select a size before adding to cart.</p>
-                        <button id="alertCloseBtn" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md focus:outline-none focus:shadow-outline">
-                            OK
-                        </button>
-                    </div>
-                `;
-                document.body.appendChild(messageBoxOverlay);
-                document.getElementById('alertCloseBtn').addEventListener('click', () => {
-                    document.body.removeChild(messageBoxOverlay);
-                });
-                messageBoxOverlay.addEventListener('click', (e) => {
-                    if (e.target === messageBoxOverlay) {
-                        document.body.removeChild(messageBoxOverlay);
+                // If adding from Quick View Modal, close it
+                if (isInsideQuickviewModal) {
+                    quickviewModal.classList.add('hidden');
+                    quickviewModal.classList.remove('flex');
+                } else {
+                    const modal = event.currentTarget.closest('.product-options-modal');
+                    if (modal) {
+                        modal.classList.add('hidden');
+                        modal.classList.remove('flex');
                     }
-                });
-                return;
-            }
-
-            const product = {
-                id: productId, // Pass the string productId here; parseInt will happen in addToCart
-                name: productName,
-                price: productPrice,
-                image: productImage
-            };
-            addToCart(product, quantity, selectedSize);
-
-            const modal = event.currentTarget.closest('.product-options-modal');
-            if (modal) {
-                modal.classList.add('hidden');
-                modal.classList.remove('flex');
-            }
+                }
+            });
         });
-    });
 
-    document.querySelectorAll('.select-options-btn').forEach(button => {
-        button.addEventListener('click', (event) => {
-            const modalId = button.dataset.modalTarget;
-            const modal = document.getElementById(modalId);
-
-            if (modal) {
-                modal.classList.remove('hidden');
-                modal.classList.add('flex');
-            } else {
-                console.error(`Modal with ID '${modalId}' not found.`);
-            }
+        // Event listener for opening Quick View Modal
+        document.querySelectorAll('.open-quickview-btn').forEach(button => {
+            button.addEventListener('click', (event) => {
+                const productData = {
+                    id: event.currentTarget.dataset.productId,
+                    name: event.currentTarget.dataset.productName,
+                    price: event.currentTarget.dataset.productPrice,
+                    image: event.currentTarget.dataset.productImage,
+                    sizes: event.currentTarget.dataset.productSizes ? JSON.parse(event.currentTarget.dataset.productSizes) : []
+                };
+                window.openQuickviewModal(productData);
+            });
         });
-    });
 
-    document.querySelectorAll('.close-modal-btn').forEach(button => {
-        button.addEventListener('click', (event) => {
-            const modal = event.currentTarget.closest('.product-options-modal');
-            if (modal) {
-                modal.classList.add('hidden');
-                modal.classList.remove('flex');
-            }
+        // Quantity control for Quick View Modal
+        if (quickviewMinusBtn) {
+            quickviewMinusBtn.addEventListener('click', () => {
+                let currentValue = parseInt(quickviewQuantityInput.value);
+                if (currentValue > 1) {
+                    quickviewQuantityInput.value = currentValue - 1;
+                }
+            });
+        }
+
+        if (quickviewPlusBtn) {
+            quickviewPlusBtn.addEventListener('click', () => {
+                let currentValue = parseInt(quickviewQuantityInput.value);
+                quickviewQuantityInput.value = currentValue + 1;
+            });
+        }
+
+
+        // Close Quick View Modal when close button is clicked
+        if (quickviewCloseBtn) {
+            quickviewCloseBtn.addEventListener('click', () => {
+                quickviewModal.classList.add('hidden');
+                quickviewModal.classList.remove('flex');
+            });
+        }
+
+        // Close Quick View Modal when clicking outside the modal content
+        if (quickviewModal) {
+            quickviewModal.addEventListener('click', (event) => {
+                if (event.target === quickviewModal) {
+                    quickviewModal.classList.add('hidden');
+                    quickviewModal.classList.remove('flex');
+                }
+            });
+        }
+
+
+        // Existing 'Select Options' button logic (unchanged)
+        document.querySelectorAll('.select-options-btn').forEach(button => {
+            button.addEventListener('click', (event) => {
+                const modalId = button.dataset.modalTarget;
+                const modal = document.getElementById(modalId);
+
+                if (modal) {
+                    modal.classList.remove('hidden');
+                    modal.classList.add('flex');
+                } else {
+                    console.error(`Modal with ID '${modalId}' not found.`);
+                }
+            });
         });
-    });
 
-    document.addEventListener('click', (event) => {
+        // Existing 'Close Modal' button logic (unchanged)
+        document.querySelectorAll('.close-modal-btn').forEach(button => {
+            button.addEventListener('click', (event) => {
+                const modal = event.currentTarget.closest('.product-options-modal');
+                if (modal) {
+                    modal.classList.add('hidden');
+                    modal.classList.remove('flex');
+                }
+            });
+        });
+
+        // Existing outside click logic for product options modals (unchanged)
+        document.addEventListener('click', (event) => {
+            document.querySelectorAll('.product-options-modal').forEach(modal => {
+                const selectOptionsBtn = modal.closest('.product-card') ? modal.closest('.product-card').querySelector('.select-options-btn') : null;
+
+                if (selectOptionsBtn && !modal.contains(event.target) && !selectOptionsBtn.contains(event.target) && !modal.classList.contains('hidden')) {
+                    modal.classList.add('hidden');
+                    modal.classList.remove('flex');
+                }
+            });
+        });
+
+        // Existing stopPropagation for product options modals (unchanged)
         document.querySelectorAll('.product-options-modal').forEach(modal => {
-            const selectOptionsBtn = modal.closest('.product-card') ? modal.closest('.product-card').querySelector('.select-options-btn') : null;
-
-            if (selectOptionsBtn && !modal.contains(event.target) && !selectOptionsBtn.contains(event.target) && !modal.classList.contains('hidden')) {
-                modal.classList.add('hidden');
-                modal.classList.remove('flex');
-            }
+            modal.addEventListener('click', (event) => {
+                event.stopPropagation();
+            });
         });
-    });
 
-    document.querySelectorAll('.product-options-modal').forEach(modal => {
-        modal.addEventListener('click', (event) => {
-            event.stopPropagation();
+        // Optional: Wishlist Button Logic (assuming you have a handleWishlistClick function globally)
+        // Ensure that this function is defined or remove this listener if not used.
+        document.querySelectorAll('.wishlist-button').forEach(button => {
+            button.addEventListener('click', (event) => {
+                // Assuming handleWishlistClick is a global function or defined elsewhere
+                if (typeof window.handleWishlistClick === 'function') {
+                    window.handleWishlistClick(event.currentTarget);
+                } else {
+                    console.warn('handleWishlistClick function is not defined.');
+                }
+            });
         });
-    });
-});
 
-    </script>
+    });
+</script>
 @endpush

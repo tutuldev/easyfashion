@@ -271,7 +271,80 @@
     </header>
 
     @yield('content')
+    {{-- <div id="quickview-modal" class="fixed hidden inset-0 bg-black bg-opacity-50 z-[9999] items-center justify-center">
+        <div class="bg-white p-6 rounded-lg shadow-lg relative w-[90vw] max-w-4xl max-h-[90vh] overflow-y-auto">
+            <button id="quickview-close-btn"
+                class="absolute top-3 right-3 text-gray-500 hover:text-gray-800 text-2xl font-bold leading-none cursor-pointer">&times;</button>
 
+            <div class="flex flex-col md:flex-row">
+                <div class="md:w-1/2 flex justify-center items-center p-4">
+                    <img id="quickview-product-image" src="{{ asset('images/1.webp') }}" alt="Product Image"
+                        class="max-w-full h-auto object-contain">
+                </div>
+
+                <div class="md:w-1/2 p-4 flex flex-col justify-between">
+                    <div>
+                        <h2 id="quickview-product-name" class="text-2xl font-semibold mb-4">Stripe Polo T-Shirt</h2>
+                        <p id="quickview-product-price" class="text-xl font-bold mb-4">৳1,150</p>
+
+                        <div id="quickview-size-container" class="mb-4">
+                            <label for="quickview-size-select"
+                                class="block text-gray-700 text-sm font-bold mb-2">SIZE:</label>
+                            <select id="quickview-size-select"
+                                class="product-size-select block w-full border border-gray-400 px-4 py-2 rounded shadow focus:outline-none">
+                                <option value="">Choose an option</option>
+                                <option value="S">S</option>
+                                <option value="M">M</option>
+                                <option value="L">L</option>
+                                <option value="XL">XL</option>
+                            </select>
+                        </div>
+
+                        <div class="flex items-center mb-6 border border-gray-300 rounded overflow-hidden w-32">
+                            <button id="quickview-quantity-minus-btn"
+                                class="quantity-minus-btn px-3 py-2 text-gray-600 hover:bg-gray-100">-</button>
+                            <input type="text" id="quickview-quantity-input" value="1"
+                                class="quantity-input w-10 text-center border-l border-r border-gray-300 py-2 focus:outline-none"
+                                readonly>
+                            <button id="quickview-quantity-plus-btn"
+                                class="quantity-plus-btn px-3 py-2 text-gray-600 hover:bg-gray-100">+</button>
+                        </div>
+
+                        <button id="quickview-add-to-cart-btn"
+                            class="add-to-cart-btn bg-black text-white px-6 py-3 rounded-md hover:bg-gray-800 transition-colors duration-300 w-full mb-4"
+                            data-product-id="1" data-product-name="Stripe Polo T-Shirt" data-product-price="1150"
+                            data-product-image="{{ asset('images/1.webp') }}">
+                            ADD TO CART
+                        </button>
+
+                        <button id="quickview-wishlist-button"
+                            class="wishlist-button border border-gray-300 text-gray-700 px-6 py-3 rounded-md hover:bg-gray-100 transition-colors duration-300 w-full flex items-center justify-center"
+                            data-id="1" data-name="Stripe Polo T-Shirt" data-price="1150"
+                            data-image="{{ asset('images/1.webp') }}" onclick="handleWishlistClick(this)">
+                            <span class="material-symbols-outlined mr-2">favorite</span>
+                            ADD TO WISHLIST
+                        </button>
+                    </div>
+
+                    <div class="text-sm text-gray-600 mt-4">
+                        <p>SKU: HF-20WBDM2H-05-1-1-1</p>
+                        <p>Categories:
+                            <a href="#" class="hover:underline">Men</a>,
+                            <a href="#" class="hover:underline">T-Shirts</a>,
+                            <a href="#" class="hover:underline">Polo</a>
+                        </p>
+                    </div>
+
+                    <div class="mt-4 flex space-x-2">
+                        <span class="text-gray-700 font-semibold mr-2">SHARE:</span>
+                        <a href="#" class="text-gray-600 hover:text-black"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="text-gray-600 hover:text-black"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-gray-600 hover:text-black"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> --}}
     {{-- @include('frontend.layouts.footer') --}}
     {{-- @include('frontend.layouts.copyright') --}}
     @stack('scripts')
