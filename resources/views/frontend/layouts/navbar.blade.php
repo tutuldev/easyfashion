@@ -83,7 +83,7 @@
 </div>
 
 <div id="sidebar"
-    class="fixed top-0 right-0 h-full w-[480px] bg-white shadow-lg transform translate-x-full transition-transform duration-300 ease-out z-50 flex flex-col">
+     class="fixed top-0 right-0 h-full w-[480px] bg-white shadow-lg transform translate-x-full transition-transform duration-300 ease-out z-50 flex flex-col">
     <div class="p-6 flex-grow overflow-y-auto">
         <div class="flex justify-between items-center mb-6">
             <h2 class="text-xl font-bold text-gray-800">YOUR EASY BAG</h2>
@@ -672,19 +672,36 @@ function renderCartItems() {
 
 
     {{-- js for add cart and cart page and quick view  --}}
-  <script>
-    // আপনার সম্পূর্ণ JavaScript কোড এখানে পেস্ট করুন
+<script>
+    (function() {
+    // DOM Elements - একবার ধরে নিন
     const openSidebarBtn = document.getElementById('openSidebarBtn');
     const closeSidebarBtn = document.getElementById('closeSidebarBtn');
     const sidebar = document.getElementById('sidebar');
     const itemCountSpan = document.getElementById('itemCount');
-    const cartItemsContainer = document.getElementById('cartItemsContainer'); // Sidebar container
-    const noProductsMessage = document.getElementById('noProductsMessage'); // Sidebar specific message
-    const cartSubtotalSpan = document.getElementById('cartSubtotal'); // Sidebar specific subtotal
-    const continueShoppingDiv = document.getElementById('continueShoppingDiv'); // Sidebar specific div
+    const cartItemsContainer = document.getElementById('cartItemsContainer');
+    const noProductsMessage = document.getElementById('noProductsMessage');
+    const cartSubtotalSpan = document.getElementById('cartSubtotal');
+    const continueShoppingDiv = document.getElementById('continueShoppingDiv');
+    const mainCartContainer = document.getElementById('mainCartItemsContainer');
+    const mainCartSubtotalSpan = document.getElementById('mainCartSubtotal');
+    const mainCartTotalSpan = document.getElementById('mainCartTotal');
+    const quickviewModal = document.getElementById('quickview-modal');
+    const quickviewImage = document.getElementById('quickview-product-image');
+    const quickviewName = document.getElementById('quickview-product-name');
+    const quickviewPrice = document.getElementById('quickview-product-price');
+    const quickviewSizeSelect = document.getElementById('quickview-size-select');
+    const quickviewQuantityInput = document.getElementById('quickview-quantity-input');
+    const quickviewMinusBtn = document.getElementById('quickview-quantity-minus-btn');
+    const quickviewPlusBtn = document.getElementById('quickview-quantity-plus-btn');
+    const quickviewAddToCartBtn = document.getElementById('quickview-add-to-cart-btn');
+    const quickviewWishlistBtn = document.getElementById('quickview-wishlist-button');
+    const quickviewCloseBtn = document.getElementById('quickview-close-btn');
+    const quickviewSizeContainer = document.getElementById('quickview-size-container');
 
     let cart = [];
 
+    // হেল্পার ফাংশন
     function hideSidebar() {
         if (sidebar) {
             sidebar.classList.remove('translate-x-0');
@@ -699,33 +716,18 @@ function renderCartItems() {
         }
     }
 
-    if (openSidebarBtn) {
-        openSidebarBtn.addEventListener('click', showSidebar);
-    }
-    if (closeSidebarBtn) {
-        closeSidebarBtn.addEventListener('click', hideSidebar);
-    }
-
-    document.addEventListener('click', (event) => {
-        if (sidebar && openSidebarBtn && !sidebar.contains(event.target) && !openSidebarBtn.contains(event.target) && sidebar.classList.contains('translate-x-0')) {
-            hideSidebar();
-        }
-    });
-
-    if (sidebar) {
-        sidebar.addEventListener('click', (event) => {
-            event.stopPropagation();
-        });
-    }
-
     function loadCart() {
-        const storedCart = localStorage.getItem('easyBagCart');
-        if (storedCart) {
-            cart = JSON.parse(storedCart);
-            // Ensure all item IDs are integers upon loading, as a fallback
-            cart.forEach(item => {
-                item.id = parseInt(item.id);
-            });
+        try {
+            const storedCart = localStorage.getItem('easyBagCart');
+            if (storedCart) {
+                cart = JSON.parse(storedCart);
+                cart.forEach(item => {
+                    item.id = parseInt(item.id); // Ensure ID is integer
+                });
+            }
+        } catch (e) {
+            console.error("Error loading cart from localStorage:", e);
+            cart = []; // Reset cart on error
         }
         updateCartUI();
     }
@@ -735,13 +737,8 @@ function renderCartItems() {
     }
 
     function addToCart(product, quantity, size) {
-        // --- START DEBUGGING LOGS ---
-        console.log('addToCart: product.id BEFORE parseInt:', product.id, 'Type:', typeof product.id);
         const parsedProductId = parseInt(product.id);
-        console.log('addToCart: product.id AFTER parseInt:', parsedProductId, 'Type:', typeof parsedProductId);
-        // --- END DEBUGGING LOGS ---
-
-        const cartItemId = `${parsedProductId}-${size}`; // Use parsedProductId here
+        const cartItemId = `${parsedProductId}-${size}`;
         const existingProductIndex = cart.findIndex(item => item.cartId === cartItemId);
 
         if (existingProductIndex > -1) {
@@ -749,7 +746,7 @@ function renderCartItems() {
         } else {
             cart.push({
                 cartId: cartItemId,
-                id: parsedProductId, // Use the parsed ID here
+                id: parsedProductId,
                 name: product.name,
                 price: product.price,
                 image: product.image,
@@ -783,51 +780,44 @@ function renderCartItems() {
         }
     }
 
-    // Render cart items in the sidebar AND/OR main cart page
-    function renderCartItems(targetContainerId, isMainCartPage = false) {
-        const targetContainer = document.getElementById(targetContainerId);
+    function renderCartItems(targetContainer, isMainCartPage = false) {
         if (!targetContainer) return;
 
-        targetContainer.innerHTML = ''; // Clear previous items
+        targetContainer.innerHTML = '';
+        const fragment = document.createDocumentFragment();
 
         if (cart.length === 0) {
-            // Only show "No products" message on the main cart page if it's the target
             if (isMainCartPage) {
                 const noProductsDiv = document.createElement('div');
                 noProductsDiv.classList.add('text-center', 'py-8');
                 noProductsDiv.innerHTML = '<p class="text-gray-600 text-lg">Your cart is empty.</p><a href="/" class="mt-4 inline-block bg-gray-800 text-white px-6 py-3 rounded-md hover:bg-gray-700 transition">Continue Shopping</a>';
-                targetContainer.appendChild(noProductsDiv);
+                fragment.appendChild(noProductsDiv);
 
-                // Hide the cart totals section if no products on main cart page
                 const cartTotalsSection = document.getElementById('mainCartTotalsSection');
                 if (cartTotalsSection) {
                     cartTotalsSection.style.display = 'none';
                 }
             } else {
-                // For sidebar: manage the specific noProductsMessage and continueShoppingDiv
                 if (noProductsMessage) noProductsMessage.style.display = 'block';
                 if (continueShoppingDiv) continueShoppingDiv.style.display = 'none';
             }
-
         } else {
-            // For sidebar: hide "No products" message
             if (!isMainCartPage) {
                 if (noProductsMessage) noProductsMessage.style.display = 'none';
                 if (continueShoppingDiv) continueShoppingDiv.style.display = 'block';
             }
 
-            // For main cart page: ensure totals section is visible
             if (isMainCartPage) {
                 const cartTotalsSection = document.getElementById('mainCartTotalsSection');
                 if (cartTotalsSection) {
-                    cartTotalsSection.style.display = 'flex'; // Changed to flex for desktop layout
+                    cartTotalsSection.style.display = 'flex';
                 }
             }
 
             cart.forEach(item => {
+                const itemDiv = document.createElement('div');
                 let itemHtml = '';
                 if (isMainCartPage) {
-                    // for cart page
                     itemHtml = `
                     <div class="grid grid-cols-1 md:grid-cols-5 gap-4 items-center border-b pb-4 mb-4 relative">
                         <div class="flex items-center col-span-2">
@@ -853,13 +843,12 @@ function renderCartItems() {
                             </button>
                         </div>
                         <div class="text-gray-800 text-base font-medium text-right">৳${(item.price * item.quantity).toLocaleString()}</div>
-                       <button class="text-gray-400 hover:text-red-500 remove-item-btn ml-auto md:ml-0 md:absolute md:right-0 md:top-1/2 md:transform md:-translate-y-1/2" data-cart-item-id="${item.cartId}" style="right: -25px; /* Adjust this value as needed */">
+                       <button class="text-gray-400 hover:text-red-500 remove-item-btn ml-auto md:ml-0 md:absolute md:right-0 md:top-1/2 md:transform md:-translate-y-1/2" data-cart-item-id="${item.cartId}" style="right: -25px;">
                             <span class="material-symbols-outlined text-xl">close</span>
                         </button>
                     </div>
-                `;
+                    `;
                 } else {
-                    // HTML for the sidebar
                     itemHtml = `
                         <div class="flex items-start mb-4 border-b pb-4">
                             <img src="${item.image}" alt="${item.name}" class="w-20 h-20 object-cover rounded-md mr-4 flex-shrink-0">
@@ -886,19 +875,17 @@ function renderCartItems() {
                         </div>
                     `;
                 }
-                targetContainer.insertAdjacentHTML('beforeend', itemHtml);
+                itemDiv.innerHTML = itemHtml;
+                fragment.appendChild(itemDiv);
             });
         }
+        targetContainer.appendChild(fragment);
     }
 
     function updateCartUI() {
-        // Render for sidebar
-        renderCartItems('cartItemsContainer', false);
-
-        // Render for main cart page (if #mainCartItemsContainer exists)
-        const mainCartContainer = document.getElementById('mainCartItemsContainer');
+        renderCartItems(cartItemsContainer, false); // Sidebar
         if (mainCartContainer) {
-            renderCartItems('mainCartItemsContainer', true);
+            renderCartItems(mainCartContainer, true); // Main cart page
         }
 
         let totalItems = 0;
@@ -915,90 +902,30 @@ function renderCartItems() {
         if (cartSubtotalSpan) {
             cartSubtotalSpan.textContent = `৳ ${subtotal.toLocaleString()}`;
         }
-
-        // Update main cart page subtotals and totals
-        const mainCartSubtotalSpan = document.getElementById('mainCartSubtotal');
         if (mainCartSubtotalSpan) {
             mainCartSubtotalSpan.textContent = `৳ ${subtotal.toLocaleString()}`;
         }
-        const mainCartTotalSpan = document.getElementById('mainCartTotal');
         if (mainCartTotalSpan) {
             mainCartTotalSpan.textContent = `৳ ${subtotal.toLocaleString()}`;
         }
-
-        // Add event listeners to newly rendered items (for both sidebar and main cart page)
-        document.querySelectorAll('.remove-item-btn').forEach(button => {
-            button.addEventListener('click', (event) => {
-                const cartItemId = event.currentTarget.dataset.cartItemId;
-                removeFromCart(cartItemId);
-            });
-        });
-
-        document.querySelectorAll('.sidebar-quantity-minus-btn, .cart-page-quantity-minus-btn').forEach(button => {
-            button.addEventListener('click', (event) => {
-                const cartItemId = event.currentTarget.dataset.cartItemId;
-                const currentItem = cart.find(item => item.cartId === cartItemId);
-                if (currentItem && currentItem.quantity > 1) {
-                    updateQuantity(cartItemId, currentItem.quantity - 1);
-                } else if (currentItem && currentItem.quantity === 1) {
-                    removeFromCart(cartItemId);
-                }
-            });
-        });
-
-        document.querySelectorAll('.sidebar-quantity-plus-btn, .cart-page-quantity-plus-btn').forEach(button => {
-            button.addEventListener('click', (event) => {
-                const cartItemId = event.currentTarget.dataset.cartItemId;
-                const currentItem = cart.find(item => item.cartId === cartItemId);
-                if (currentItem) {
-                    updateQuantity(cartItemId, currentItem.quantity + 1);
-                }
-            });
-        });
-
-        document.querySelectorAll('.sidebar-quantity-input, .cart-page-quantity-input').forEach(input => {
-            input.addEventListener('change', (event) => {
-                const cartItemId = event.currentTarget.dataset.cartItemId;
-                const newQuantity = parseInt(event.currentTarget.value);
-                updateQuantity(cartItemId, newQuantity);
-            });
-        });
     }
 
-    // --- Quick View Modal related variables and functions ---
-    const quickviewModal = document.getElementById('quickview-modal');
-    const quickviewImage = document.getElementById('quickview-product-image');
-    const quickviewName = document.getElementById('quickview-product-name');
-    const quickviewPrice = document.getElementById('quickview-product-price');
-    const quickviewSizeSelect = document.getElementById('quickview-size-select');
-    const quickviewQuantityInput = document.getElementById('quickview-quantity-input');
-    const quickviewMinusBtn = document.getElementById('quickview-quantity-minus-btn');
-    const quickviewPlusBtn = document.getElementById('quickview-quantity-plus-btn');
-    const quickviewAddToCartBtn = document.getElementById('quickview-add-to-cart-btn');
-    const quickviewWishlistBtn = document.getElementById('quickview-wishlist-button');
-    const quickviewCloseBtn = document.getElementById('quickview-close-btn');
-    const quickviewSizeContainer = document.getElementById('quickview-size-container');
-
-
+    // Quick View Modal functions
     window.openQuickviewModal = function(productData) {
         if (!quickviewModal) {
             console.error('Quick View Modal element not found!');
             return;
         }
 
-        // Populate modal with product data
         quickviewImage.src = productData.image;
         quickviewImage.alt = productData.name;
         quickviewName.textContent = productData.name;
         quickviewPrice.textContent = `৳${parseFloat(productData.price).toLocaleString()}`;
-        quickviewQuantityInput.value = 1; // Reset quantity to 1
+        quickviewQuantityInput.value = 1;
 
-        // Clear previous sizes
         quickviewSizeSelect.innerHTML = '';
-
-        // Populate sizes if available
         if (productData.sizes && productData.sizes.length > 0) {
-            quickviewSizeContainer.style.display = 'block'; // Show size container
+            quickviewSizeContainer.style.display = 'block';
             const defaultOption = document.createElement('option');
             defaultOption.value = '';
             defaultOption.textContent = 'Select Size';
@@ -1013,10 +940,9 @@ function renderCartItems() {
                 quickviewSizeSelect.appendChild(option);
             });
         } else {
-            quickviewSizeContainer.style.display = 'none'; // Hide size container if no sizes
+            quickviewSizeContainer.style.display = 'none';
         }
 
-        // Set data attributes for Add to Cart and Wishlist buttons inside the modal
         quickviewAddToCartBtn.dataset.productId = productData.id;
         quickviewAddToCartBtn.dataset.productName = productData.name;
         quickviewAddToCartBtn.dataset.productPrice = productData.price;
@@ -1027,38 +953,97 @@ function renderCartItems() {
         quickviewWishlistBtn.dataset.price = productData.price;
         quickviewWishlistBtn.dataset.image = productData.image;
 
-        // Show the modal
         quickviewModal.classList.remove('hidden');
         quickviewModal.classList.add('flex');
     };
 
+    function showAlertDialog(message) {
+        const messageBoxOverlay = document.createElement('div');
+        messageBoxOverlay.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[9999]';
+        messageBoxOverlay.innerHTML = `
+            <div class="bg-white p-6 rounded-lg shadow-xl max-w-sm w-full mx-4 text-center">
+                <p class="text-gray-800 text-lg mb-4">${message}</p>
+                <button id="alertCloseBtn" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md focus:outline-none focus:shadow-outline">
+                    OK
+                </button>
+            </div>
+        `;
+        document.body.appendChild(messageBoxOverlay);
+
+        document.getElementById('alertCloseBtn').addEventListener('click', () => {
+            document.body.removeChild(messageBoxOverlay);
+        });
+
+        messageBoxOverlay.addEventListener('click', (e) => {
+            if (e.target === messageBoxOverlay) {
+                document.body.removeChild(messageBoxOverlay);
+            }
+        });
+    }
+
+    // ইভেন্ট লিসেনার ইনিশিয়ালাইজেশন
     document.addEventListener('DOMContentLoaded', () => {
         loadCart();
 
-        // Product page/modal quantity buttons (if present)
-        // These are for the main product page or other modals, not quickview modal specific
-        document.querySelectorAll('.quantity-minus-btn').forEach(button => {
-            button.addEventListener('click', (event) => {
-                const input = event.target.nextElementSibling;
-                let currentValue = parseInt(input.value);
-                if (currentValue > 1) {
-                    input.value = currentValue - 1;
+        if (openSidebarBtn) {
+            openSidebarBtn.addEventListener('click', showSidebar);
+        }
+        if (closeSidebarBtn) {
+            closeSidebarBtn.addEventListener('click', hideSidebar);
+        }
+
+        document.addEventListener('click', (event) => {
+            if (sidebar && openSidebarBtn && !sidebar.contains(event.target) && !openSidebarBtn.contains(event.target) && sidebar.classList.contains('translate-x-0')) {
+                hideSidebar();
+            }
+        });
+
+        if (sidebar) {
+            sidebar.addEventListener('click', (event) => {
+                event.stopPropagation();
+            });
+        }
+
+        // ইভেন্ট ডেলিগেশন ব্যবহার করে কার্ট আইটেমগুলোর জন্য ইভেন্ট লিসেনার
+        const cartContainers = [cartItemsContainer, mainCartContainer].filter(Boolean); // উভয় কন্টেইনার নিশ্চিত করুন
+        cartContainers.forEach(container => {
+            container.addEventListener('click', (event) => {
+                const target = event.target.closest('button, input');
+                if (!target) return; // যদি বাটন বা ইনপুট না হয়, তাহলে কিছু করবেন না
+
+                const cartItemId = target.dataset.cartItemId;
+
+                if (target.classList.contains('remove-item-btn')) {
+                    removeFromCart(cartItemId);
+                } else if (target.classList.contains('sidebar-quantity-minus-btn') || target.classList.contains('cart-page-quantity-minus-btn')) {
+                    const currentItem = cart.find(item => item.cartId === cartItemId);
+                    if (currentItem && currentItem.quantity > 1) {
+                        updateQuantity(cartItemId, currentItem.quantity - 1);
+                    } else if (currentItem && currentItem.quantity === 1) {
+                        removeFromCart(cartItemId);
+                    }
+                } else if (target.classList.contains('sidebar-quantity-plus-btn') || target.classList.contains('cart-page-quantity-plus-btn')) {
+                    const currentItem = cart.find(item => item.cartId === cartItemId);
+                    if (currentItem) {
+                        updateQuantity(cartItemId, currentItem.quantity + 1);
+                    }
+                }
+            });
+
+            container.addEventListener('change', (event) => {
+                const target = event.target;
+                if (target.classList.contains('sidebar-quantity-input') || target.classList.contains('cart-page-quantity-input')) {
+                    const cartItemId = target.dataset.cartItemId;
+                    const newQuantity = parseInt(target.value);
+                    updateQuantity(cartItemId, newQuantity);
                 }
             });
         });
 
-        document.querySelectorAll('.quantity-plus-btn').forEach(button => {
-            button.addEventListener('click', (event) => {
-                const input = event.target.previousElementSibling;
-                let currentValue = parseInt(input.value);
-                input.value = currentValue + 1;
-            });
-        });
 
         // Add to Cart button logic for product cards and quick view modal
         document.querySelectorAll('.add-to-cart-btn').forEach(button => {
             button.addEventListener('click', (event) => {
-                // Determine if the button is inside a quick view modal or a regular product card
                 const isInsideQuickviewModal = event.currentTarget.closest('#quickview-modal');
                 const parentElement = isInsideQuickviewModal ? quickviewModal : (event.currentTarget.closest('.product-card') || event.currentTarget.closest('.product-options-modal'));
 
@@ -1072,45 +1057,16 @@ function renderCartItems() {
                 const productPrice = parseFloat(event.currentTarget.dataset.productPrice);
                 const productImage = event.currentTarget.dataset.productImage;
 
-                // For quickview modal, use the quickview-specific quantity and size inputs
                 const quantityInput = isInsideQuickviewModal ? quickviewQuantityInput : parentElement.querySelector('.quantity-input');
                 const quantity = parseInt(quantityInput.value);
 
-                // For quickview modal, use the quickview-specific size select
                 const sizeSelect = isInsideQuickviewModal ? quickviewSizeSelect : parentElement.querySelector('.product-size-select');
                 const selectedSize = sizeSelect ? sizeSelect.value : '';
 
-                // Only show alert if a size selection is mandatory and not made
-           if (sizeSelect && sizeSelect.style.display !== 'none' && sizeSelect.options.length > 1 && selectedSize === "") {
-    const messageBoxOverlay = document.createElement('div');
-    messageBoxOverlay.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[9999]';
-    messageBoxOverlay.innerHTML = `
-        <div class="bg-white p-6 rounded-lg shadow-xl max-w-sm w-full mx-4 text-center">
-            <p class="text-gray-800 text-lg mb-4">Please select a size before adding to cart.</p>
-            <button id="alertCloseBtn" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md focus:outline-none focus:shadow-outline">
-                OK
-            </button>
-        </div>
-    `;
-
-    // Append to end of body
-    document.body.appendChild(messageBoxOverlay);
-
-    // Close on button click
-    document.getElementById('alertCloseBtn').addEventListener('click', () => {
-        document.body.removeChild(messageBoxOverlay);
-    });
-
-    // Close on overlay click
-    messageBoxOverlay.addEventListener('click', (e) => {
-        if (e.target === messageBoxOverlay) {
-            document.body.removeChild(messageBoxOverlay);
-        }
-    });
-
-    return;
-}
-
+                if (sizeSelect && sizeSelect.style.display !== 'none' && sizeSelect.options.length > 1 && selectedSize === "") {
+                    showAlertDialog('Please select a size before adding to cart.');
+                    return;
+                }
 
                 const product = {
                     id: productId,
@@ -1120,7 +1076,6 @@ function renderCartItems() {
                 };
                 addToCart(product, quantity, selectedSize);
 
-                // If adding from Quick View Modal, close it
                 if (isInsideQuickviewModal) {
                     quickviewModal.classList.add('hidden');
                     quickviewModal.classList.remove('flex');
@@ -1134,7 +1089,7 @@ function renderCartItems() {
             });
         });
 
-        // Event listener for opening Quick View Modal
+        // Open Quick View Modal
         document.querySelectorAll('.open-quickview-btn').forEach(button => {
             button.addEventListener('click', (event) => {
                 const productData = {
@@ -1148,7 +1103,7 @@ function renderCartItems() {
             });
         });
 
-        // Quantity control for Quick View Modal
+        // Quick View Modal Quantity controls
         if (quickviewMinusBtn) {
             quickviewMinusBtn.addEventListener('click', () => {
                 let currentValue = parseInt(quickviewQuantityInput.value);
@@ -1157,7 +1112,6 @@ function renderCartItems() {
                 }
             });
         }
-
         if (quickviewPlusBtn) {
             quickviewPlusBtn.addEventListener('click', () => {
                 let currentValue = parseInt(quickviewQuantityInput.value);
@@ -1165,16 +1119,13 @@ function renderCartItems() {
             });
         }
 
-
-        // Close Quick View Modal when close button is clicked
+        // Close Quick View Modal
         if (quickviewCloseBtn) {
             quickviewCloseBtn.addEventListener('click', () => {
                 quickviewModal.classList.add('hidden');
                 quickviewModal.classList.remove('flex');
             });
         }
-
-        // Close Quick View Modal when clicking outside the modal content
         if (quickviewModal) {
             quickviewModal.addEventListener('click', (event) => {
                 if (event.target === quickviewModal) {
@@ -1184,13 +1135,11 @@ function renderCartItems() {
             });
         }
 
-
-        // Existing 'Select Options' button logic (unchanged)
+        // Existing 'Select Options' and 'Close Modal' buttons
         document.querySelectorAll('.select-options-btn').forEach(button => {
             button.addEventListener('click', (event) => {
                 const modalId = button.dataset.modalTarget;
                 const modal = document.getElementById(modalId);
-
                 if (modal) {
                     modal.classList.remove('hidden');
                     modal.classList.add('flex');
@@ -1200,7 +1149,6 @@ function renderCartItems() {
             });
         });
 
-        // Existing 'Close Modal' button logic (unchanged)
         document.querySelectorAll('.close-modal-btn').forEach(button => {
             button.addEventListener('click', (event) => {
                 const modal = event.currentTarget.closest('.product-options-modal');
@@ -1211,11 +1159,10 @@ function renderCartItems() {
             });
         });
 
-        // Existing outside click logic for product options modals (unchanged)
+        // Outside click logic for product options modals
         document.addEventListener('click', (event) => {
             document.querySelectorAll('.product-options-modal').forEach(modal => {
                 const selectOptionsBtn = modal.closest('.product-card') ? modal.closest('.product-card').querySelector('.select-options-btn') : null;
-
                 if (selectOptionsBtn && !modal.contains(event.target) && !selectOptionsBtn.contains(event.target) && !modal.classList.contains('hidden')) {
                     modal.classList.add('hidden');
                     modal.classList.remove('flex');
@@ -1223,18 +1170,15 @@ function renderCartItems() {
             });
         });
 
-        // Existing stopPropagation for product options modals (unchanged)
         document.querySelectorAll('.product-options-modal').forEach(modal => {
             modal.addEventListener('click', (event) => {
                 event.stopPropagation();
             });
         });
 
-        // Optional: Wishlist Button Logic (assuming you have a handleWishlistClick function globally)
-        // Ensure that this function is defined or remove this listener if not used.
+        // Wishlist button logic
         document.querySelectorAll('.wishlist-button').forEach(button => {
             button.addEventListener('click', (event) => {
-                // Assuming handleWishlistClick is a global function or defined elsewhere
                 if (typeof window.handleWishlistClick === 'function') {
                     window.handleWishlistClick(event.currentTarget);
                 } else {
@@ -1242,7 +1186,8 @@ function renderCartItems() {
                 }
             });
         });
-
     });
+
+})();
 </script>
 @endpush

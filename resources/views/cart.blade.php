@@ -100,6 +100,6 @@
             </div>
         </div>
     </div>
-    <div class="py-40"></div>
+  
 
 @endsection

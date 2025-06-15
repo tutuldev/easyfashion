@@ -9,9 +9,12 @@ use Illuminate\Support\Facades\Log;
 
 class OrderController extends Controller
 {
-    /**
-     * Show the checkout page.
-     */
+
+        public function index()
+        {
+            $orders = Order::latest()->paginate(15);
+            return view('backend.orders.index', compact('orders'));
+        }
     public function create()
     {
         return view('checkout');
@@ -93,4 +96,13 @@ class OrderController extends Controller
         // নিশ্চিত করুন আপনার কাছে frontend/order-confirmation.blade.php ফাইলটি আছে
         return view('order-confirmation', compact('order'));
     }
+
+        public function destroy(Order $order)
+        {
+            $order->delete();
+
+            return redirect()
+                ->route('orders.index')
+                ->with('success', 'Order deleted successfully!');
+        }
 }
