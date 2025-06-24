@@ -40,6 +40,8 @@
 
             <!-- Right side icons -->
             <div class="flex items-center space-x-4">
+                <!-- Notification Sound -->
+                <audio id="notif-sound" src="{{ asset('sound/notification.mp3') }}" preload="auto"></audio>
                 <!-- Notification Button + Dropdown -->
                 <div class="relative">
                     <button id="notif-btn" class="relative">
@@ -56,8 +58,6 @@
                         <div id="notif-list"></div>
                     </div>
 
-                    <!-- Notification Sound -->
-                    {{-- <audio id="notif-sound" src="{{ asset('sound/notification.mp3') }}" preload="auto"></audio> --}}
                 </div>
 
 
@@ -74,8 +74,8 @@
         </header>
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-    const NOTIF_URL = '/notifications/orders';
-    const MARK_URL  = '/notifications/orders/mark-read';
+    const NOTIF_URL  = '/notifications/orders';
+    const MARK_URL   = '/notifications/orders/mark-read';
     const CSRF_TOKEN = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
     const countEl     = document.getElementById('notif-count');
@@ -84,16 +84,26 @@ document.addEventListener('DOMContentLoaded', function () {
     const soundPlayer = document.getElementById('notif-sound');
 
     let prevUnread = 0;
+    let soundUnlocked = false;
 
-    // 🔊 Unlock audio permission
+    // 🔓 Unlock sound ONLY ONCE with mute to prevent half sound
     document.addEventListener('click', () => {
-        soundPlayer.play().then(() => soundPlayer.pause());
+        if (!soundUnlocked) {
+            soundPlayer.volume = 0;
+            soundPlayer.play().then(() => {
+                soundPlayer.pause();
+                soundPlayer.currentTime = 0;
+                soundPlayer.volume = 1;
+                soundUnlocked = true;
+            }).catch(() => {});
+        }
     }, { once: true });
 
-    // ⏱️ Start polling
+    // 🔁 Poll every 5 seconds
     loadNotifications();
     setInterval(loadNotifications, 5000);
 
+    // ⏱️ Format time to "x min ago"
     function timeAgo(dateString) {
         const now  = new Date();
         const past = new Date(dateString);
@@ -105,12 +115,14 @@ document.addEventListener('DOMContentLoaded', function () {
         return `${Math.floor(diff / 86400)} day ago`;
     }
 
+    // 📡 Load notifications from server
     async function loadNotifications() {
         try {
             const res = await fetch(NOTIF_URL, {
                 headers: { 'Accept': 'application/json' },
                 cache: 'no-store'
             });
+
             const data = await res.json();
             updateUI(data);
         } catch (err) {
@@ -118,23 +130,27 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+    // 🧠 Update UI with sound & orders
     function updateUI(data) {
-        // 🔢 Count
-        if (data.unread > 0) {
-            countEl.textContent = data.unread;
+        const unread = parseInt(data.unread || 0);
+
+        // 🔔 Sound only if new unread & unlocked
+        if (unread > prevUnread && unread > 0 && soundUnlocked && soundPlayer.paused) {
+            soundPlayer.currentTime = 0;
+            soundPlayer.play().catch(() => {});
+        }
+
+        prevUnread = unread;
+
+        // 🔢 Update count
+        if (unread > 0) {
+            countEl.textContent = unread;
             countEl.classList.remove('hidden');
         } else {
             countEl.classList.add('hidden');
         }
 
-        // 🔔 Sound
-        if (data.unread > prevUnread) {
-            soundPlayer.currentTime = 0;
-            soundPlayer.play().catch(() => {});
-        }
-        prevUnread = data.unread;
-
-        // 📝 Order List
+        // 📥 Order list
         if (data.orders.length > 0) {
             listEl.innerHTML = data.orders.map(order => {
                 let products = "";
@@ -144,14 +160,14 @@ document.addEventListener('DOMContentLoaded', function () {
                         `<li class="text-xs text-gray-600">• ${p.name} (${p.size}) × ${p.quantity}</li>`
                     ).join('');
                 } else {
-                    products = "<li class='text-xs text-red-500'>No product info</li>";
+                    products = "<li class='text-xs text-red-500'>Invalid product info</li>";
                 }
 
                 return `
                     <a href="/admin/orders/${order.id}"
                        class="block px-4 py-3 hover:bg-gray-100 ${order.is_read ? '' : 'bg-blue-50'}">
                         <div class="flex justify-between text-sm">
-                            <span class="font-semibold text-gray-800">#${order.id}</span>
+                            <span class="font-semibold text-gray-800">New Order  #${order.id}</span>
                             <span class="text-gray-500 text-xs">${timeAgo(order.created_at)}</span>
                         </div>
                         <div class="text-sm text-gray-700">${order.customer_name} - ৳${Number(order.total).toFixed(2)}</div>
@@ -170,6 +186,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+    // 🔘 Show dropdown and mark as read
     document.getElementById('notif-btn').addEventListener('click', async () => {
         dropdownEl.classList.toggle('hidden');
 
@@ -193,4 +210,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 </script>
+
+
+
 
