@@ -6,9 +6,9 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
-// Route::get('/', function () {
-//     return view('welcome');
-// });
+Route::get('/product-category', function () {
+    return view('product-category');
+});
 Route::get('/', function () {
     return view('home');
 });
