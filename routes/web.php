@@ -9,6 +9,9 @@ use Illuminate\Support\Facades\Route;
 Route::get('/product-category', function () {
     return view('product-category');
 });
+Route::get('/singel-product-show', function () {
+    return view('singel-product-show');
+});
 Route::get('/', function () {
     return view('home');
 });
