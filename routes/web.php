@@ -27,6 +27,12 @@ Route::middleware('auth')->group(function () {
     Route::resource('categories', CategoryController::class);
     Route::resource('products', ProductController::class);
 
+    // order notification
+    // routes/web.php বা routes/api.php (যেখানে সুবিধা)
+    Route::get ('/notifications/orders',        [OrderController::class,'latestOrders']);
+    Route::post('/notifications/orders/mark-read', [OrderController::class,'markOrdersRead']);
+
+
 });
 
 Route::resource('orders', OrderController::class);

@@ -97,15 +97,15 @@
                         <td class="px-4 py-2 border">
                             <div class="flex flex-wrap justify-center gap-2">
                                 {{-- ✏️ Edit --}}
-                                <a href="{{ route('orders.edit', $order->id) }}"
+                                <a href="{{ route('orders.show', $order->id) }}"
                                     class="px-2 py-1 rounded text-xs text-white bg-sky-600 hover:bg-sky-700 transition">
-                                    Edit
+                                    Show
                                 </a>
 
                                 {{-- 🔄 Update (status/payment) --}}
                                 <a href="{{ route('orders.edit', $order->id) }}"
                                     class="px-2 py-1 rounded text-xs  text-white bg-blue-600 hover:bg-blue-700 transition">
-                                    Update
+                                    Edit
                                 </a>
 
                                 {{-- 🗑️ Delete --}}

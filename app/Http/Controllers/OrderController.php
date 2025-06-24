@@ -105,4 +105,33 @@ class OrderController extends Controller
                 ->route('orders.index')
                 ->with('success', 'Order deleted successfully!');
         }
+
+
+public function latestOrders()
+{
+    $orders      = Order::latest()           // read / unread মিলিয়ে
+                        ->take(5)            // সর্বশেষ ৫‑টি
+                        ->get(['id','customer_name','total','created_at','is_read']);
+
+    $unreadCount = Order::where('is_read', false)->count();
+
+    return response()->json([
+        'unread' => $unreadCount,
+        'orders' => $orders,
+    ]);
+}
+
+
+public function markOrdersRead()
+{
+    // শুধু সর্বশেষ ৫‑টির মধ্যকার un‑read গুলো read করি
+    $latestIds = Order::latest()->take(5)->pluck('id');
+
+    Order::whereIn('id', $latestIds)
+         ->where('is_read', false)
+         ->update(['is_read' => true]);
+
+    return response()->json(['status' => 'ok']);
+}
+
 }
