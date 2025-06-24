@@ -109,9 +109,9 @@ class OrderController extends Controller
 
 public function latestOrders()
 {
-    $orders      = Order::latest()           // read / unread মিলিয়ে
-                        ->take(5)            // সর্বশেষ ৫‑টি
-                        ->get(['id','customer_name','total','created_at','is_read']);
+    $orders = Order::latest()
+        ->take(5)
+        ->get(['id', 'customer_name', 'total', 'created_at', 'is_read', 'product_details']);
 
     $unreadCount = Order::where('is_read', false)->count();
 
