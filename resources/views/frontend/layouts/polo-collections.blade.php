@@ -5,7 +5,7 @@
         <div class="swiper-container polo-swiper w-full pb-10">
             <div class="swiper-wrapper">
 
-                 @include('frontend.layouts.singel-card')
+                 @include('frontend.layouts.singel-card',['products' => $products])
 
 
             </div>

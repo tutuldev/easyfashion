@@ -1,6 +1,32 @@
 {{-- singel product component HTML (e.g., resources/views/components/product-card.blade.php) --}}
 
-<x-product-card
+@php use Illuminate\Support\Str; @endphp
+
+@foreach($products as $product)
+    @php
+        $img = $product->images[0] ?? null;
+
+        $imgUrl = $img
+            ? (Str::startsWith($img, 'products/')
+                ? asset('storage/' . $img)
+                : asset($img))
+            : asset('images/default.webp');
+    @endphp
+
+    <x-product-card
+        :id="$product->id"
+        :name="$product->name"
+        :price="$product->price"
+        :comparePrice="$product->compare_at_price"
+        :sku="$product->sku"
+        :sizes="['S', 'M', 'L', 'XL']"
+        :image="$imgUrl"
+    />
+@endforeach
+
+
+
+{{-- <x-product-card
     :id="1"
     name="Full Shart"
     :price="1150"
@@ -8,8 +34,8 @@
     :sizes="['S', 'M', 'L', 'XL']"
     sku="HF-20WBDM2H-05-1-1-1"
     :categories="['Men', 'T-Shirts', 'Polo']"
-/>
-<x-product-card
+/> --}}
+{{-- <x-product-card
     :id="2"
     name="Polo T-Shirt black"
     :price="1150"
@@ -89,7 +115,7 @@
     :sizes="['S', 'M', 'L', 'XL']"
     sku="HF-20WBDM2H-05-1-1-1"
     :categories="['Men', 'T-Shirts', 'Polo']"
-/>
+/> --}}
 
 
 
