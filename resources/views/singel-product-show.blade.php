@@ -67,7 +67,7 @@
 </div>
 {{-- description  --}}
 <div class="bg-white pt-20 ">
-    <div class="flex flex-col sm:flex-row mx-auto max-w-screen-2xl justify-between mx-auto max-w-screen-2xl">
+    <div class="flex flex-col sm:flex-row mx-auto max-w-screen-2xl justify-between ">
     <div class=" flex-1 ">
         <h3 class="text-black font-bold text-2xl">Description</h3>
         <p class=" text-xl font-semibold mt-10 mb-20">Full Sleeve Classic Fit Shirt</p>

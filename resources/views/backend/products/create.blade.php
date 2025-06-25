@@ -12,7 +12,6 @@
 <form action="{{ route('products.store') }}" method="POST" enctype="multipart/form-data" class="w-full bg-white p-6 rounded-lg shadow space-y-4">
     @csrf
 
-    <!-- Product Name -->
     <div>
         <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Product Name</label>
         <input type="text" id="name" name="name" placeholder="Enter product name"
@@ -23,20 +22,17 @@
         @enderror
     </div>
 
-    <!-- Description -->
     <div>
         <label for="description" class="block text-sm font-medium text-gray-700 mb-1">Description</label>
         <textarea id="description" name="description"
-    class="w-full border border-gray-300 rounded p-2" rows="6">{{ old('description') }}</textarea>
-
+        class="w-full border border-gray-300 rounded p-2" rows="6">{{ old('description') }}</textarea>
         @error('description')
             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
         @enderror
     </div>
 
-    <!-- Price -->
     <div>
-        <label for="price" class="block text-sm font-medium text-gray-700 mb-1">Price (৳)</label>
+        <label for="price" class="block text-sm font-medium text-gray-700 mb-1">Current Price (৳)</label>
         <input type="number" id="price" name="price" step="0.01"
                class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                value="{{ old('price') }}" required />
@@ -45,7 +41,58 @@
         @enderror
     </div>
 
-    <!-- Category -->
+    <div>
+        <label for="compare_at_price" class="block text-sm font-medium text-gray-700 mb-1">Compare at Price (৳) <span class="text-gray-500">(Optional)</span></label>
+        <input type="number" id="compare_at_price" name="compare_at_price" step="0.01"
+               class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+               value="{{ old('compare_at_price') }}" />
+        @error('compare_at_price')
+            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+        @enderror
+    </div>
+
+    <div>
+        <label for="cost_price" class="block text-sm font-medium text-gray-700 mb-1">Cost Price (৳) <span class="text-gray-500">(Internal, Optional)</span></label>
+        <input type="number" id="cost_price" name="cost_price" step="0.01"
+               class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+               value="{{ old('cost_price') }}" />
+        @error('cost_price')
+            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+        @enderror
+    </div>
+
+    <div>
+        <label for="sku" class="block text-sm font-medium text-gray-700 mb-1">SKU</label>
+        <input type="text" id="sku" name="sku" placeholder="Enter SKU (e.g., ABC-123)"
+               class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+               value="{{ old('sku') }}" />
+        @error('sku')
+            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+        @enderror
+    </div>
+
+    <div>
+        <label for="quantity_in_stock" class="block text-sm font-medium text-gray-700 mb-1">Quantity in Stock</label>
+        <input type="number" id="quantity_in_stock" name="quantity_in_stock" min="0"
+               class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+               value="{{ old('quantity_in_stock', 0) }}" required />
+        @error('quantity_in_stock')
+            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+        @enderror
+    </div>
+
+    <div>
+        <label for="active" class="block text-sm font-medium text-gray-700 mb-1">Status</label>
+        <select id="active" name="active"
+                class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+            <option value="1" {{ old('active', true) ? 'selected' : '' }}>Active</option>
+            <option value="0" {{ !old('active', true) ? 'selected' : '' }}>Inactive</option>
+        </select>
+        @error('active')
+            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+        @enderror
+    </div>
+
     <div>
         <label for="category_id" class="block text-sm font-medium text-gray-700 mb-1">Category</label>
         <select id="category_id" name="category_id"
@@ -62,7 +109,6 @@
         @enderror
     </div>
 
-    <!-- Images Upload -->
     <div>
         <label class="block text-sm font-medium text-gray-700 mb-1">Upload Images (Optional)</label>
         <input type="file" id="images" name="images[]" multiple accept="image/*"
@@ -74,7 +120,6 @@
         @enderror
     </div>
 
-    <!-- Submit -->
     <button type="submit"
             class="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition duration-200">
         Create Product

@@ -28,8 +28,13 @@
                 <h2 class="text-2xl font-semibold mb-6 text-gray-700">Product Images</h2>
                 <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                     @foreach ($product->images as $img)
+                                @php
+                                $imgUrl = Str::startsWith($img, 'products/')
+                                    ? asset('storage/' . $img)
+                                    : asset($img);
+                                 @endphp
                         <div class="relative rounded-xl overflow-hidden border border-gray-200 shadow-sm bg-white group">
-                            <img src="{{ asset('storage/' . $img) }}" alt="Product Image"
+                            <img src="{{ asset($imgUrl) }}" alt="Product Image"
                                 class="w-full h-48 object-cover">
                         </div>
                     @endforeach

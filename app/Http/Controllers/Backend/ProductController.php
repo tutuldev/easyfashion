@@ -36,22 +36,33 @@ class ProductController extends Controller
      */
         public function store(Request $request)
         {
-            $validated = $request->validate([
-                'name'        => 'required|string|max:255',
-                'description' => 'nullable|string',
-                'price'       => 'required|numeric',
-                'category_id' => 'required|exists:categories,id',
-                'images.*'    => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
-            ]);
+             $validated = $request->validate([
+            'name'              => 'required|string|max:255',
+            'compare_at_price'  => 'nullable|numeric|gt:price', // 'price' এর থেকে বেশি হতে হবে
+            'cost_price'        => 'nullable|numeric|lt:price',  // 'price' এর থেকে কম হতে হবে
+            'sku'               => 'nullable|string|max:255|unique:products,sku', // SKU ইউনিক হতে হবে
+            'quantity_in_stock' => 'required|integer|min:0',
+            'active'            => 'required|boolean', // 0 বা 1 ভ্যালিডেশন
+            'description'       => 'nullable|string',
+            'price'             => 'required|numeric|min:0',
+            'category_id'       => 'required|exists:categories,id',
+            'images.*'          => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048', // প্রতিটি ইমেজের জন্য
+        ]);
 
-            $product = Product::create([
-                'name'        => $validated['name'],
-                'slug'        => Str::slug($validated['name']),
-                'description' => $validated['description'],
-                'price'       => $validated['price'],
-                'category_id' => $validated['category_id'],
-                'images'      => [], // Will update later
-            ]);
+    // প্রোডাক্ট তৈরি করুন
+    $product = Product::create([
+        'name'              => $validated['name'],
+        'slug'              => Str::slug($validated['name']),
+        'description'       => $validated['description'],
+        'price'             => $validated['price'],
+        'compare_at_price'  => $validated['compare_at_price'] ?? null,
+        'cost_price'        => $validated['cost_price'] ?? null,
+        'sku'               => $validated['sku'] ?? null,
+        'quantity_in_stock' => $validated['quantity_in_stock'],
+        'active'            => $validated['active'],
+        'category_id'       => $validated['category_id'],
+        'images'            => [], // প্রথমে একটি খালি অ্যারে সেট করা হলো, পরে ইমেজগুলো যোগ হবে
+    ]);
 
             $imagePaths = [];
 
@@ -94,23 +105,33 @@ class ProductController extends Controller
      */
 public function update(Request $request, Product $product)
 {
-    $validated = $request->validate([
-        'name'         => 'required|string|max:255',
-        'description'  => 'nullable|string',
-        'price'        => 'required|numeric',
-        'category_id'  => 'required|exists:categories,id',
-        'images.*'     => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
-        'remove_images'=> 'nullable|array',
-        'remove_images.*' => 'string',
+     $validated = $request->validate([
+        'name'              => 'required|string|max:255',
+        'compare_at_price'  => 'nullable|numeric|gt:price',
+        'cost_price'        => 'nullable|numeric|lt:price',
+        'sku'               => 'nullable|string|max:255|unique:products,sku,' . $product->id,
+        'quantity_in_stock' => 'required|integer|min:0',
+        'active'            => 'required|boolean',
+        'description'       => 'nullable|string',
+        'price'             => 'required|numeric|min:0',
+        'category_id'       => 'required|exists:categories,id',
+        'images.*'          => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+        'remove_images'     => 'nullable|array',
+        'remove_images.*'   => 'string', // পাথের জন্য স্ট্রিং
     ]);
 
     // ✅ মূল ইনফো আপডেট করুন
     $product->update([
-        'name'        => $validated['name'],
-        'slug'        => Str::slug($validated['name']),
-        'description' => $validated['description'],
-        'price'       => $validated['price'],
-        'category_id' => $validated['category_id'],
+        'name'              => $validated['name'],
+        'slug'              => Str::slug($validated['name']),
+        'description'       => $validated['description'],
+        'price'             => $validated['price'],
+        'compare_at_price'  => $validated['compare_at_price'] ?? null,
+        'cost_price'        => $validated['cost_price'] ?? null,
+        'sku'               => $validated['sku'] ?? null,
+        'quantity_in_stock' => $validated['quantity_in_stock'],
+        'active'            => $validated['active'],
+        'category_id'       => $validated['category_id'],
     ]);
 
 

@@ -11,17 +11,22 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('products', function (Blueprint $table) {
-        $table->id();
-        $table->string('name');
-        $table->string('slug')->unique();
-        $table->text('description')->nullable();
-        $table->decimal('price', 10, 2);
-        $table->foreignId('category_id')->constrained()->onDelete('cascade');
-        $table->json('images')->nullable();
+    Schema::create('products', function (Blueprint $table) {
+    $table->id();
+    $table->string('name');
+    $table->string('slug')->unique();
+    $table->text('description')->nullable();
+    $table->decimal('price', 10, 2);
+    $table->decimal('compare_at_price', 10, 2)->nullable();
+    $table->decimal('cost_price', 10, 2)->nullable();
+    $table->string('sku')->unique()->nullable();
+    $table->integer('quantity_in_stock')->default(0);
+    $table->boolean('active')->default(true);
+    $table->foreignId('category_id')->constrained()->onDelete('cascade');
+    $table->json('images')->nullable(); 
 
-        $table->timestamps();
-        });
+    $table->timestamps();
+});
     }
 
     /**

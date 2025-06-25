@@ -5,24 +5,21 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use App\Models\Product;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Storage; // Don't forget to import Storage
-use Faker\Factory as Faker; // Don't forget to import Faker
-use Illuminate\Support\Facades\Log; // ✅ THIS IS THE LINE THAT WAS LIKELY MISSING OR MISPLACED
+use Illuminate\Support\Facades\Storage;
+use Faker\Factory as Faker;
+use Illuminate\Support\Facades\Log;
 
 class ProductSeeder extends Seeder
 {
     public function run(): void
     {
-        $faker = Faker::create('en_US'); // You can specify a locale
+        $faker = Faker::create('en_US');
 
         // ---
-        // Clean up the 'products' image folder before seeding
-        // This ensures that old demo images are removed before new ones are created.
-        if (Storage::disk('public')->exists('products')) {
-            Storage::disk('public')->deleteDirectory('products');
-        }
-        // Recreate the directory after deleting it
-        Storage::disk('public')->makeDirectory('products');
+        // Clean up the 'products' image folder before seeding.
+        // If your images are static in 'public/images', you don't need to delete this.
+        // This part is more relevant if you were dynamically downloading and storing images.
+        // For static images, you just need to ensure they exist in public/images.
         // ---
 
         $productsData = [
@@ -51,42 +48,54 @@ class ProductSeeder extends Seeder
             ['Casual Panjabi', 'Lightweight for daily wear.', 899.00, 4],
         ];
 
+        $imageIndex = 1; // For cycling through pro-1.webp to pro-10.webp
+
         foreach ($productsData as [$name, $description, $price, $category_id]) {
-            $imagePaths = [];
-            // Generate 1 to 3 random images for each product
-            $numberOfImages = rand(1, 3);
-
-            for ($i = 0; $i < $numberOfImages; $i++) {
-                $filename = uniqid() . '.jpg'; // Unique filename
-                $path = 'products/' . $filename; // Path within the 'public' disk
-
-                try {
-                    // Fetch a random image from Lorem Picsum or a similar service
-                    // using Faker's imageUrl method. Ensure you have internet connectivity.
-                    $imageUrl = $faker->imageUrl(400, 300, 'clothing', true, $name);
-                    $imageContent = @file_get_contents($imageUrl); // Added @ to suppress warnings directly if URL fails
-
-                    if ($imageContent !== false) {
-                        Storage::disk('public')->put($path, $imageContent); // Store the image
-                        $imagePaths[] = $path; // Add to the list of paths for this product
-                    } else {
-                        // This line was likely causing the error if Log facade was not imported
-                        Log::warning("[ProductSeeder] Failed to download image from: " . $imageUrl);
-                    }
-                } catch (\Exception $e) {
-                    // This line was also likely causing the error if Log facade was not imported
-                    Log::error("[ProductSeeder] Error saving image for product '{$name}': " . $e->getMessage());
-                    // If an image fails to download, you might want to skip it or add a default
-                }
+            $currentPrice = $price;
+            $compareAtPrice = null;
+            // Optionally set a compare_at_price for some products (e.g., 50% chance)
+            if ($faker->boolean(50)) {
+                $compareAtPrice = round($currentPrice * $faker->randomFloat(2, 1.1, 1.5), 2); // 10% to 50% higher
             }
 
+            // Generate an SKU
+            $sku = 'PROD-' . strtoupper(Str::random(6)) . '-' . rand(100, 999);
+
+            // Set quantity in stock
+            $quantityInStock = $faker->numberBetween(10, 200);
+
+            // Set active status
+            $active = $faker->boolean(95); // 95% chance to be active
+
+            // --- Image Handling ---
+            $imagePaths = [];
+            $numberOfImages = rand(1, 3); // Each product can have 1 to 3 images
+
+            for ($i = 0; $i < $numberOfImages; $i++) {
+                // Construct the image path based on your specified structure
+                // 'images/' is the sub-directory inside 'public'
+                $imagePaths[] = 'images/pro-' . $imageIndex . '.webp'; // ✅ এখানে পরিবর্তন করা হয়েছে
+
+                // Increment index and reset if it goes beyond 10
+                $imageIndex++;
+                if ($imageIndex > 10) {
+                    $imageIndex = 1;
+                }
+            }
+            // --- End Image Handling ---
+
             Product::create([
-                'name'        => $name,
-                'slug'        => Str::slug($name),
-                'description' => $description,
-                'price'       => $price,
-                'category_id' => $category_id,
-                'images'      => $imagePaths, // Store the generated image paths
+                'name'              => $name,
+                'slug'              => Str::slug($name),
+                'description'       => $description,
+                'price'             => $currentPrice,
+                'compare_at_price'  => $compareAtPrice,
+                'cost_price'        => round($currentPrice * $faker->randomFloat(2, 0.5, 0.8), 2), // Cost is 50-80% of current price
+                'sku'               => $sku,
+                'quantity_in_stock' => $quantityInStock,
+                'active'            => $active,
+                'category_id'       => $category_id,
+                'images'            => $imagePaths, // Store the array of static image paths
             ]);
         }
     }

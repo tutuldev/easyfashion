@@ -41,8 +41,13 @@
                             <td class="px-4 py-2 border">
                                     @if (!empty($product->images) && is_array($product->images) && count($product->images) > 0)
                                         <div class="flex flex-wrap gap-1 justify-center">
-                                            @foreach (array_slice($product->images, 0, 3) as $img) {{-- --}}
-                                                <img src="{{ asset('storage/' . $img) }}" alt="Image" class="w-10 h-10 object-cover rounded border border-gray-300">
+                                            @foreach (array_slice($product->images, 0, 3) as $img)
+                                              @php
+                                                $imgUrl = Str::startsWith($img, 'products/')
+                                                    ? asset('storage/' . $img)
+                                                    : asset($img);
+                                                @endphp
+                                                <img src="{{ asset($imgUrl) }}" alt="Image" class="w-10 h-10 object-cover rounded border border-gray-300">
                                             @endforeach
                                             @if (count($product->images) > 3)
                                                 <span class="w-10 h-10 flex items-center justify-center text-xs bg-gray-200 rounded border border-gray-300">

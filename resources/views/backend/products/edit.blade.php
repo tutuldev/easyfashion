@@ -7,94 +7,132 @@
         Edit Product
     </h2>
 
-    <form action="{{ route('products.update', $product->slug) }}" method="POST" enctype="multipart/form-data"
-          class="w-full bg-white p-6 rounded-lg shadow space-y-4">
-        @csrf
-        @method('PUT')
+ <form action="{{ route('products.update', $product->slug) }}" method="POST" enctype="multipart/form-data"
+      class="w-full bg-white p-6 rounded-lg shadow space-y-4">
+    @csrf
+    @method('PUT')
 
-        <!-- Product Name -->
-        <div>
-            <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Product Name</label>
-            <input type="text" id="name" name="name"
-                   value="{{ old('name', $product->name) }}"
-                   class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
-            @error('name') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
-        </div>
-
-        <!-- Description -->
-        <div>
-            <label for="description" class="block text-sm font-medium text-gray-700 mb-1">Description</label>
-            <textarea id="description" name="description"
-                      class="w-full border border-gray-300 rounded p-2" rows="6">{{ old('description', $product->description) }}</textarea>
-            @error('description') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
-        </div>
-
-        <!-- Price -->
-        <div>
-            <label for="price" class="block text-sm font-medium text-gray-700 mb-1">Price (৳)</label>
-            <input type="number" id="price" name="price" step="0.01"
-                   value="{{ old('price', $product->price) }}"
-                   class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
-            @error('price') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
-        </div>
-
-        <!-- Category -->
-        <div>
-            <label for="category_id" class="block text-sm font-medium text-gray-700 mb-1">Category</label>
-            <select id="category_id" name="category_id"
-                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
-                <option value="">Select Category</option>
-                @foreach($categories as $category)
-                    <option value="{{ $category->id }}" {{ old('category_id', $product->category_id) == $category->id ? 'selected' : '' }}>
-                        {{ $category->name }}
-                    </option>
-                @endforeach
-            </select>
-            @error('category_id') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
-        </div>
-
-        <!-- Existing Images -->
-     <!-- Existing Images -->
-@if ($product->images && count($product->images))
     <div>
-        <p id="oldImagesLabel" class="text-sm font-medium text-gray-700 mb-2">Existing Images</p>
-        <div id="existing-images" class="flex flex-wrap gap-4">
-            @foreach($product->images as $image)
-                <div class="relative w-24 h-24">
-                    <img src="{{ asset('storage/' . $image) }}"
-                         class="w-full h-full object-cover rounded shadow">
-                    <!-- ❌ Remove Button -->
-                    <button type="button"
-                            class="old-del absolute top-0 right-0 bg-red-600 text-white rounded-full w-5 h-5 text-xs flex items-center justify-center"
-                            data-path="{{ $image }}">
-                        ✕
-                    </button>
-                </div>
-            @endforeach
-        </div>
-
-        <!-- Hidden inputs added via JS for removed images -->
-        <div id="removedImagesWrapper"></div>
+        <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Product Name</label>
+        <input type="text" id="name" name="name"
+               value="{{ old('name', $product->name) }}"
+               class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+        @error('name') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
     </div>
-@endif
 
+    <div>
+        <label for="description" class="block text-sm font-medium text-gray-700 mb-1">Description</label>
+        <textarea id="description" name="description"
+                  class="w-full border border-gray-300 rounded p-2" rows="6">{{ old('description', $product->description) }}</textarea>
+        @error('description') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
+    </div>
 
-        <!-- Upload New Images -->
+    <div>
+        <label for="price" class="block text-sm font-medium text-gray-700 mb-1">Current Price (৳)</label>
+        <input type="number" id="price" name="price" step="0.01"
+               value="{{ old('price', $product->price) }}"
+               class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+        @error('price') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
+    </div>
+
+    <div>
+        <label for="compare_at_price" class="block text-sm font-medium text-gray-700 mb-1">Compare at Price (৳) <span class="text-gray-500">(Optional)</span></label>
+        <input type="number" id="compare_at_price" name="compare_at_price" step="0.01"
+               value="{{ old('compare_at_price', $product->compare_at_price) }}"
+               class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
+        @error('compare_at_price') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
+    </div>
+
+    <div>
+        <label for="cost_price" class="block text-sm font-medium text-gray-700 mb-1">Cost Price (৳) <span class="text-gray-500">(Internal, Optional)</span></label>
+        <input type="number" id="cost_price" name="cost_price" step="0.01"
+               value="{{ old('cost_price', $product->cost_price) }}"
+               class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
+        @error('cost_price') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
+    </div>
+
+    <div>
+        <label for="sku" class="block text-sm font-medium text-gray-700 mb-1">SKU</label>
+        <input type="text" id="sku" name="sku" placeholder="Enter SKU (e.g., ABC-123)"
+               value="{{ old('sku', $product->sku) }}"
+               class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
+        @error('sku') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
+    </div>
+
+    <div>
+        <label for="quantity_in_stock" class="block text-sm font-medium text-gray-700 mb-1">Quantity in Stock</label>
+        <input type="number" id="quantity_in_stock" name="quantity_in_stock" min="0"
+               value="{{ old('quantity_in_stock', $product->quantity_in_stock) }}"
+               class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required />
+        @error('quantity_in_stock') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
+    </div>
+
+    <div>
+        <label for="active" class="block text-sm font-medium text-gray-700 mb-1">Status</label>
+        <select id="active" name="active"
+                class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+            <option value="1" {{ old('active', $product->active) == '1' ? 'selected' : '' }}>Active</option>
+            <option value="0" {{ old('active', $product->active) == '0' ? 'selected' : '' }}>Inactive</option>
+        </select>
+        @error('active') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
+    </div>
+
+    <div>
+        <label for="category_id" class="block text-sm font-medium text-gray-700 mb-1">Category</label>
+        <select id="category_id" name="category_id"
+                class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+            <option value="">Select Category</option>
+            @foreach($categories as $category)
+                <option value="{{ $category->id }}" {{ old('category_id', $product->category_id) == $category->id ? 'selected' : '' }}>
+                    {{ $category->name }}
+                </option>
+            @endforeach
+        </select>
+        @error('category_id') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
+    </div>
+
+    @if ($product->images && count($product->images))
         <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Add More Images (Optional)</label>
-            <input type="file" id="images" name="images[]" multiple accept="image/*"
-                   class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                   onchange="previewImages(event)" />
-            <div id="image-preview" class="flex flex-wrap gap-3 mt-3"></div>
-            @error('images.*') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
-        </div>
+            <p id="oldImagesLabel" class="text-sm font-medium text-gray-700 mb-2">Existing Images</p>
+            <div id="existing-images" class="flex flex-wrap gap-4">
+                @foreach($product->images as $image)
+                @php
+                    $imgUrl = Str::startsWith($image, 'products/')
+                        ? asset('storage/' . $image)
+                        : asset($image);
+                @endphp
+                    <div class="relative w-24 h-24">
 
-        <!-- Submit -->
-        <button type="submit"
-                class="w-full bg-yellow-500 text-white py-2 rounded-md hover:bg-yellow-600 transition duration-200">
-            Update Product
-        </button>
-    </form>
+
+                        <img src="{{ asset($imgUrl) }}"
+                             class="w-full h-full object-cover rounded shadow">
+                        <button type="button"
+                                class="old-del absolute top-0 right-0 bg-red-600 text-white rounded-full w-5 h-5 text-xs flex items-center justify-center"
+                                data-path="{{ $image }}">
+                            ✕
+                        </button>
+                    </div>
+                @endforeach
+            </div>
+
+            <div id="removedImagesWrapper"></div>
+        </div>
+    @endif
+
+    <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Add More Images (Optional)</label>
+        <input type="file" id="images" name="images[]" multiple accept="image/*"
+               class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+               onchange="previewImages(event)" />
+        <div id="image-preview" class="flex flex-wrap gap-3 mt-3"></div>
+        @error('images.*') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
+    </div>
+
+    <button type="submit"
+            class="w-full bg-yellow-500 text-white py-2 rounded-md hover:bg-yellow-600 transition duration-200">
+        Update Product
+    </button>
+</form>
 @endsection
 
 @push('scripts-bk')
