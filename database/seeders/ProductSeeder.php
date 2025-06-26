@@ -15,12 +15,6 @@ class ProductSeeder extends Seeder
     {
         $faker = Faker::create('en_US');
 
-        // ---
-        // Clean up the 'products' image folder before seeding.
-        // If your images are static in 'public/images', you don't need to delete this.
-        // This part is more relevant if you were dynamically downloading and storing images.
-        // For static images, you just need to ensure they exist in public/images.
-        // ---
 
         $productsData = [
             ['Classic T-Shirt', 'Basic cotton t-shirt for everyday wear.', 499.99, 1],

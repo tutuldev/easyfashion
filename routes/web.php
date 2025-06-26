@@ -12,6 +12,9 @@ Route::get('/product-category', function () {
     return view('product-category');
 });
 
+Route::get('/category/{slug}', [CategoryController::class, 'singleCategoryShow'])->name('category.single.show');
+
+
 Route::get('/', [HomeController::class, 'index']);
 
 

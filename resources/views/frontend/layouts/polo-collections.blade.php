@@ -1,6 +1,7 @@
-<section class="polo-collections bg-white py-8 px-4 md:py-12 md:px-6 lg:px-8 ">
-    <div class="max-w-screen-xl mx-auto relative"> {{-- Make this div relative for absolute positioning of buttons --}}
-        <h2 class="text-3xl md:text-4xl font-semibold text-gray-800 mb-8 md:mb-10 ">Latest Polo Collections</h2>
+<section class="polo-collections  py-8 px-4 md:py-12 md:px-6 lg:px-8 ">
+    <div class=" bg-white ">
+        <div class="max-w-screen-xl mx-auto relative">
+            <h2 class="text-3xl md:text-4xl font-semibold text-gray-800 mb-8 md:mb-10 ">Latest Polo Collections</h2>
 
         <div class="swiper-container polo-swiper w-full pb-10">
             <div class="swiper-wrapper">
@@ -47,6 +48,7 @@
 
 
 
+        </div>
     </div>
 </section>
 

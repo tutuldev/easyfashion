@@ -21,6 +21,22 @@
     <p class="text-lg font-medium text-gray-800">{{ $category->name }}</p>
   </div>
 
+  {{-- Image Display Section --}}
+  <div class="mb-4">
+    <p class="text-sm text-gray-500">Category Image</p>
+    @if ($category->image)
+        @php
+            $imageUrl = Str::startsWith($category->image, 'categories/')
+                ? asset('storage/' . $category->image)
+                : asset($category->image);
+        @endphp
+        <img src="{{ $imageUrl }}" alt="{{ $category->name }}" class="w-48 h-48 object-cover rounded-lg shadow-md mt-2">
+    @else
+        <p class="text-lg font-medium text-gray-800">No Image Available</p>
+    @endif
+  </div>
+  {{-- End Image Display Section --}}
+
   <div class="mb-6">
  <a href="{{ route('products.filterByCategory', ['categoryName' => $category->name]) }}" class="block">
     <div class="bg-gray-50 hover:bg-gray-100 transition rounded-md py-4 px-5 border border-gray-200 flex justify-between items-center">
@@ -49,7 +65,7 @@
     </a>
 
     <form action="{{ route('categories.destroy', $category->slug) }}" method="POST"
-       onsubmit="return confirm('Are you sure you want to delete this category?');">
+      onsubmit="return confirm('Are you sure you want to delete this category?');">
       @csrf
       @method('DELETE')
       <button type="submit"
@@ -60,4 +76,5 @@
     </form>
   </div>
 </div>
+
 @endsection
