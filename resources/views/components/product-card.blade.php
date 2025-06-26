@@ -1,8 +1,9 @@
 <div class="swiper-slide">
     <div class="product-card bg-white w-full group overflow-hidden relative ">
         <div class="relative h-[400px] w-full border overflow-hidden">
-            <img src="{{ asset($image) }}" alt="{{ $name }}"
-                class="w-full h-full object-cover block min-w-[300px]">
+            <a href="{{ route('single-product', ['id' => $id]) }}">
+                <img src="{{ asset($image) }}" alt="{{ $name }}" class="w-full h-full object-cover block min-w-[300px]">
+            </a>
             <span class="absolute bottom-2 left-2 bg-white text-[10px] px-2 py-0.5">New</span>
         </div>
 

@@ -1,6 +1,5 @@
 {{-- singel product component HTML (e.g., resources/views/components/product-card.blade.php) --}}
 
-@php use Illuminate\Support\Str; @endphp
 
 @foreach($products as $product)
     @php
@@ -23,100 +22,6 @@
         :image="$imgUrl"
     />
 @endforeach
-
-
-
-{{-- <x-product-card
-    :id="1"
-    name="Full Shart"
-    :price="1150"
-    image="images/pro-1.webp"
-    :sizes="['S', 'M', 'L', 'XL']"
-    sku="HF-20WBDM2H-05-1-1-1"
-    :categories="['Men', 'T-Shirts', 'Polo']"
-/> --}}
-{{-- <x-product-card
-    :id="2"
-    name="Polo T-Shirt black"
-    :price="1150"
-    image="images/pro-2.webp"
-    :sizes="['S', 'M', 'L', 'XL']"
-    sku="HF-20WBDM2H-05-1-1-1"
-    :categories="['Men', 'T-Shirts', 'Polo']"
-/>
-<x-product-card
-    :id="3"
-    name="Half Shart printed"
-    :price="1150"
-    image="images/pro-3.webp"
-    :sizes="['S', 'M', 'L', 'XL']"
-    sku="HF-20WBDM2H-05-1-1-1"
-    :categories="['Men', 'T-Shirts', 'Polo']"
-/>
-<x-product-card
-    :id="4"
-    name="Panjabi"
-    :price="1150"
-    image="images/pro-4.webp"
-    :sizes="['S', 'M', 'L', 'XL']"
-    sku="HF-20WBDM2H-05-1-1-1"
-    :categories="['Men', 'T-Shirts', 'Polo']"
-/>
-<x-product-card
-    :id="5"
-    name="Blue  T-Shirt"
-    :price="1150"
-    image="images/pro-5.webp"
-    :sizes="['S', 'M', 'L', 'XL']"
-    sku="HF-20WBDM2H-05-1-1-1"
-    :categories="['Men', 'T-Shirts', 'Polo']"
-/>
-<x-product-card
-    :id="6"
-    name="Stripe Polo T-Shirt"
-    :price="1160"
-    image="images/pro-6.webp"
-    :sizes="['S', 'M', 'L', 'XL']"
-    sku="HF-20WBDM2H-05-1-1-1"
-    :categories="['Men', 'T-Shirts', 'Polo']"
-/>
-<x-product-card
-    :id="7"
-    name="Stripe Polo T-Shirt"
-    :price="1170"
-    image="images/pro-7.webp"
-    :sizes="['S', 'M', 'L', 'XL']"
-    sku="HF-20WBDM2H-05-1-1-1"
-    :categories="['Men', 'T-Shirts', 'Polo']"
-/>
-<x-product-card
-    :id="8"
-    name="Stripe Polo T-Shirt"
-    :price="1180"
-    image="images/pro-8.webp"
-    :sizes="['S', 'M', 'L', 'XL']"
-    sku="HF-20WBDM2H-05-1-1-1"
-    :categories="['Men', 'T-Shirts', 'Polo']"
-/>
-<x-product-card
-    :id="9"
-    name="Stripe Polo T-Shirt"
-    :price="1190"
-    image="images/pro-9.webp"
-    :sizes="['S', 'M', 'L', 'XL']"
-    sku="HF-20WBDM2H-05-1-1-1"
-    :categories="['Men', 'T-Shirts', 'Polo']"
-/>
-<x-product-card
-    :id="10"
-    name="Stripe Polo T-Shirt"
-    :price="11100"
-    image="images/pro-10.webp"
-    :sizes="['S', 'M', 'L', 'XL']"
-    sku="HF-20WBDM2H-05-1-1-1"
-    :categories="['Men', 'T-Shirts', 'Polo']"
-/> --}}
-
 
 
 @push('scripts')

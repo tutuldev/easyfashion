@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Backend\CategoryController;
 use App\Http\Controllers\Backend\ProductController;
+use App\Http\Controllers\Frontend\FroProductController;
 use App\Http\Controllers\Frontend\HomeController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProfileController;
@@ -10,9 +11,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/product-category', function () {
     return view('product-category');
 });
-Route::get('/singel-product-show', function () {
-    return view('singel-product-show');
-});
+
 Route::get('/', [HomeController::class, 'index']);
 
 
@@ -46,6 +45,8 @@ Route::post('/order', [OrderController::class, 'store'])->name('order');
 // Admin order list
 Route::middleware(['auth'])->get('/admin/orders', [OrderController::class, 'index']);
 Route::get('/order-confirmation/{order}', [OrderController::class, 'show'])->name('order.confirmation');
+
+Route::get('/product/{id}', [FroProductController::class, 'show'])->name('single-product');
 
 // cart
 Route::get('/cart', function () {
