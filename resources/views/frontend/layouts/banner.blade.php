@@ -1,10 +1,21 @@
 <div class="swiper lg:h-screen h-[80vh] min-h-[700px] w-full relative ">
   <div class="swiper-wrapper">
 
-    <div class="swiper-slide relative h-full w-full">
+<x-promo-slide image="images/1.webp" url="/category/casual-shirt" title="EID Al-Adha" />
+<x-promo-slide image="images/2.webp" url="/category/casual-shirt" title="Casual Shirt" />
+<x-promo-slide image="images/3.webp" url="/category/half-shirt" title="Half Shirt" />
+<x-promo-slide image="images/4.webp" url="/category/panjabi" title="Panjabi Collection" />
+<x-promo-slide image="images/5.webp" url="/category/polo" title="Polo T-shirt" />
+<x-promo-slide image="images/6.webp" url="/category/printed-t-shart" title="Printed T-shirt" />
+
+
+
+
+
+    {{-- <div class="swiper-slide relative h-full w-full">
       <img src="{{ asset('images/1.webp') }}" class="absolute inset-0 w-full h-full object-cover" alt="Slide 1" />
-      <div class="overlay"></div> {{-- Overlay Layer --}}
-      <div class="blur-layer"></div> {{-- Blur Layer --}}
+      <div class="overlay"></div>
+      <div class="blur-layer"></div>
       <div class="relative z-10 flex flex-col justify-center h-full pl-[15%] text-left text-white space-y-4">
         <p class="text-[13px] font-bold">Easy Special</p>
         <h2 class="text-4xl md:text-5xl lg:text-6xl 2xl:text-7xl font-bold pb-10">
@@ -12,63 +23,67 @@
           <span class="block mt-2 md:mt-4">Collection 25</span>
         </h2>
 
-        <button class="group inline-flex items-center justify-center
-                           w-32 h-10 rounded-full border border-white hover:border-2
-                           text-white font-semibold space-x-2 ">
-          <span class="text-sm">BUY NOW</span>
-          <span class="block h-0.5 w-6 bg-white
-                                   origin-center transform
-                                   transition-transform duration-300 ease-in-out
-                                   group-hover:scale-x-50">
-          </span>
-        </button>
+     <a href="/category/casual-shirt"
+   class="group inline-flex items-center justify-center
+          w-32 h-10 rounded-full border border-white hover:border-2
+          text-white font-semibold space-x-2">
+    <span class="text-sm">BUY NOW</span>
+    <span class="block h-0.5 w-6 bg-white
+                 origin-center transform
+                 transition-transform duration-300 ease-in-out
+                 group-hover:scale-x-50">
+    </span>
+</a>
+
       </div>
     </div>
 
     <div class="swiper-slide relative h-full w-full">
       <img src="{{ asset('images/2.webp') }}" class="absolute inset-0 w-full h-full object-cover" alt="Slide 2" />
-      <div class="overlay"></div> {{-- Overlay Layer --}}
-      <div class="blur-layer"></div> {{-- Blur Layer --}}
+      <div class="overlay"></div>
+      <div class="blur-layer"></div>
       <div class="relative z-10 flex flex-col justify-center h-full pl-[15%] text-left text-white space-y-4">
         <p class="text-[13px] font-bold">Easy Special</p>
         <h2 class="text-4xl md:text-5xl lg:text-6xl 2xl:text-7xl font-bold leading-tight pb-10">Casual Shirt</h2>
-        <button class="group inline-flex items-center justify-center
-                           w-32 h-10 rounded-full border border-white hover:border-2
-                           text-white font-semibold space-x-2 ">
-          <span class="text-sm">BUY NOW</span>
-          <span class="block h-0.5 w-6 bg-white
-                                   origin-center transform
-                                   transition-transform duration-300 ease-in-out
-                                   group-hover:scale-x-50">
-          </span>
-        </button>
+          <a href="/category/casual-shirt"
+   class="group inline-flex items-center justify-center
+          w-32 h-10 rounded-full border border-white hover:border-2
+          text-white font-semibold space-x-2">
+    <span class="text-sm">BUY NOW</span>
+    <span class="block h-0.5 w-6 bg-white
+                 origin-center transform
+                 transition-transform duration-300 ease-in-out
+                 group-hover:scale-x-50">
+    </span>
+</a>
       </div>
     </div>
 
     <div class="swiper-slide relative h-full w-full">
       <img src="{{ asset('images/3.webp') }}" class="absolute inset-0 w-full h-full object-cover" alt="Slide 3" />
-      <div class="overlay"></div> {{-- Overlay Layer --}}
-      <div class="blur-layer"></div> {{-- Blur Layer --}}
+      <div class="overlay"></div>
+      <div class="blur-layer"></div>
       <div class="relative z-10 flex flex-col justify-center h-full pl-[15%] text-left text-white space-y-4">
         <p class="text-[13px] font-bold">Easy Special</p>
         <h2 class="text-4xl md:text-5xl lg:text-6xl 2xl:text-7xl font-bold leading-tight pb-10">Half Shirt</h2>
-        <button class="group inline-flex items-center justify-center
-                           w-32 h-10 rounded-full border border-white hover:border-2
-                           text-white font-semibold space-x-2 ">
-          <span class="text-sm">BUY NOW</span>
-          <span class="block h-0.5 w-6 bg-white
-                                   origin-center transform
-                                   transition-transform duration-300 ease-in-out
-                                   group-hover:scale-x-50">
-          </span>
-        </button>
+          <a href="/category/half-shirt"
+            class="group inline-flex items-center justify-center
+                    w-32 h-10 rounded-full border border-white hover:border-2
+                    text-white font-semibold space-x-2">
+                <span class="text-sm">BUY NOW</span>
+                <span class="block h-0.5 w-6 bg-white
+                            origin-center transform
+                            transition-transform duration-300 ease-in-out
+                            group-hover:scale-x-50">
+                </span>
+            </a>
       </div>
     </div>
 
     <div class="swiper-slide relative h-full w-full">
       <img src="{{ asset('images/4.webp') }}" class="absolute inset-0 w-full h-full object-cover" alt="Slide 4" />
-      <div class="overlay"></div> {{-- Overlay Layer --}}
-      <div class="blur-layer"></div> {{-- Blur Layer --}}
+      <div class="overlay"></div>
+      <div class="blur-layer"></div>
       <div class="relative z-10 flex flex-col justify-center h-full pl-[15%] text-left text-white space-y-4">
         <p class="text-[13px] font-bold">Easy Special</p>
         <h2 class="text-4xl md:text-5xl lg:text-6xl 2xl:text-7xl font-bold pb-10">
@@ -76,58 +91,60 @@
           <span class="block mt-2 md:mt-4">Collection</span>
         </h2>
 
-        <button class="group inline-flex items-center justify-center
-                           w-32 h-10 rounded-full border border-white hover:border-2
-                           text-white font-semibold space-x-2 ">
-          <span class="text-sm">BUY NOW</span>
-          <span class="block h-0.5 w-6 bg-white
-                                   origin-center transform
-                                   transition-transform duration-300 ease-in-out
-                                   group-hover:scale-x-50">
-          </span>
-        </button>
+        <a href="/category/panjabi"
+            class="group inline-flex items-center justify-center
+                    w-32 h-10 rounded-full border border-white hover:border-2
+                    text-white font-semibold space-x-2">
+                <span class="text-sm">BUY NOW</span>
+                <span class="block h-0.5 w-6 bg-white
+                            origin-center transform
+                            transition-transform duration-300 ease-in-out
+                            group-hover:scale-x-50">
+                </span>
+            </a>
       </div>
     </div>
 
     <div class="swiper-slide relative h-full w-full">
       <img src="{{ asset('images/5.webp') }}" class="absolute inset-0 w-full h-full object-cover" alt="Slide 5" />
-      <div class="overlay"></div> {{-- Overlay Layer --}}
-      <div class="blur-layer"></div> {{-- Blur Layer --}}
+      <div class="overlay"></div>
+      <div class="blur-layer"></div>
       <div class="relative z-10 flex flex-col justify-center h-full pl-[15%] text-left text-white space-y-4">
         <p class="text-[13px] font-bold">Easy Special</p>
         <h2 class="text-4xl md:text-5xl lg:text-6xl 2xl:text-7xl font-bold leading-tight pb-10">Polo T-shirt</h2>
-        <button class="group inline-flex items-center justify-center
-                           w-32 h-10 rounded-full border border-white hover:border-2
-                           text-white font-semibold space-x-2 ">
-          <span class="text-sm">BUY NOW</span>
-          <span class="block h-0.5 w-6 bg-white
-                                   origin-center transform
-                                   transition-transform duration-300 ease-in-out
-                                   group-hover:scale-x-50">
-          </span>
-        </button>
+        <a href="/category/polo"
+            class="group inline-flex items-center justify-center
+                    w-32 h-10 rounded-full border border-white hover:border-2
+                    text-white font-semibold space-x-2">
+                <span class="text-sm">BUY NOW</span>
+                <span class="block h-0.5 w-6 bg-white
+                            origin-center transform
+                            transition-transform duration-300 ease-in-out
+                            group-hover:scale-x-50">
+                </span>
+            </a>
       </div>
     </div>
 
     <div class="swiper-slide relative h-full w-full">
       <img src="{{ asset('images/6.webp') }}" class="absolute inset-0 w-full h-full object-cover" alt="Slide 6" />
-      <div class="overlay"></div> {{-- Overlay Layer --}}
+      <div class="overlay"></div>
       <div class="blur-layer"></div>
       <div class="relative z-10 flex flex-col justify-center h-full pl-[15%] text-left text-white space-y-4">
         <p class="text-[13px] font-bold">Easy Special</p>
         <h2 class="text-4xl md:text-5xl lg:text-6xl 2xl:text-7xl font-bold leading-tight pb-10">Printed T-shirt</h2>
-        <button class="group inline-flex items-center justify-center
-                           w-32 h-10 rounded-full border border-white hover:border-2
-                           text-white font-semibold space-x-2 ">
-          <span class="text-sm">BUY NOW</span>
-          <span class="block h-0.5 w-6 bg-white
-                                   origin-center transform
-                                   transition-transform duration-300 ease-in-out
-                                   group-hover:scale-x-50">
-          </span>
-        </button>
+        <a href="/category/printed-t-shart" class="group inline-flex items-center justify-center
+                            w-32 h-10 rounded-full border border-white hover:border-2
+                            text-white font-semibold space-x-2">
+            <span class="text-sm">BUY NOW</span>
+            <span class="block h-0.5 w-6 bg-white
+                                    origin-center transform
+                                    transition-transform duration-300 ease-in-out
+                                    group-hover:scale-x-50">
+            </span>
+        </a>
       </div>
-    </div>
+    </div> --}}
 
   </div>
 
