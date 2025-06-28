@@ -328,347 +328,6 @@
         updateWishlistDisplay();
     });
 </script>
-{{-- end wish list  --}}
-{{-- add to cart  --}}
-{{-- <script>
-    const openSidebarBtn = document.getElementById('openSidebarBtn');
-    const closeSidebarBtn = document.getElementById('closeSidebarBtn');
-    const sidebar = document.getElementById('sidebar');
-    const itemCountSpan = document.getElementById('itemCount'); // আপনার ব্যাজ যেখানে মোট পণ্যের সংখ্যা দেখায়
-    const cartItemsContainer = document.getElementById('cartItemsContainer');
-    const noProductsMessage = document.getElementById('noProductsMessage');
-    const cartSubtotalSpan = document.getElementById('cartSubtotal');
-    const continueShoppingDiv = document.getElementById('continueShoppingDiv');
-
-    let cart = []; // এটি আমাদের কার্ট আইটেমগুলি ধারণ করবে
-
-    // --- Sidebar Toggle Functions ---
-    function hideSidebar() {
-        if (sidebar) {
-            sidebar.classList.remove('translate-x-0');
-            sidebar.classList.add('translate-x-full');
-        }
-    }
-
-    function showSidebar() {
-        if (sidebar) {
-            sidebar.classList.remove('translate-x-full');
-            sidebar.classList.add('translate-x-0');
-        }
-    }
-
-    // Sidebar buttons Event Listeners - শুধুমাত্র যদি DOM এ বিদ্যমান থাকে
-    if (openSidebarBtn) {
-        openSidebarBtn.addEventListener('click', showSidebar);
-    }
-    if (closeSidebarBtn) {
-        closeSidebarBtn.addEventListener('click', hideSidebar);
-    }
-
-    // Click outside to hide sidebar
-    document.addEventListener('click', (event) => {
-        if (sidebar && openSidebarBtn && !sidebar.contains(event.target) && !openSidebarBtn.contains(event.target) && sidebar.classList.contains('translate-x-0')) {
-            hideSidebar();
-        }
-    });
-
-    if (sidebar) {
-        sidebar.addEventListener('click', (event) => {
-            event.stopPropagation();
-        });
-    }
-
-    // --- Cart Management Functions ---
-
-    // Load cart from local storage
-    function loadCart() {
-        const storedCart = localStorage.getItem('easyBagCart');
-        if (storedCart) {
-            cart = JSON.parse(storedCart);
-        }
-        updateCartUI(); // Update the UI immediately after loading
-    }
-
-    // Save cart to local storage
-    function saveCart() {
-        localStorage.setItem('easyBagCart', JSON.stringify(cart));
-    }
-
-    // Add item to cart
-    function addToCart(product, quantity, size) {
-        const cartItemId = `${product.id}-${size}`;
-        const existingProductIndex = cart.findIndex(item => item.cartId === cartItemId);
-
-        if (existingProductIndex > -1) {
-            cart[existingProductIndex].quantity += quantity;
-        } else {
-            cart.push({
-                cartId: cartItemId,
-                id: product.id,
-                name: product.name,
-                price: product.price,
-                image: product.image,
-                quantity: quantity,
-                size: size
-            });
-        }
-        saveCart();
-        updateCartUI();
-        if (sidebar) {
-            showSidebar(); // Show sidebar when an item is added
-        }
-    }
-
-    // Remove item from cart
-    function removeFromCart(cartItemId) {
-        cart = cart.filter(item => item.cartId !== cartItemId);
-        saveCart();
-        updateCartUI();
-    }
-
-    // Update item quantity
-    function updateQuantity(cartItemId, newQuantity) {
-        const item = cart.find(item => item.cartId === cartItemId);
-        if (item) {
-            // নতুন পরিমাণ 1 এর নিচে না যায় তা নিশ্চিত করুন
-            item.quantity = Math.max(1, parseInt(newQuantity));
-
-            // সাইডবারের ইনপুট ফিল্ডটি খুঁজুন এবং তার value আপডেট করুন
-            // এই অংশটি renderCartItems() আবার কল করার কারণে আর সরাসরি প্রয়োজন নেই,
-            // কারণ renderCartItems() নিজেই সঠিক ভ্যালু দিয়ে নতুন করে রেন্ডার করবে।
-            // const inputElement = document.querySelector(`.sidebar-quantity-input[data-cart-item-id="${cartItemId}"]`);
-            // if (inputElement) {
-            //     inputElement.value = item.quantity;
-            // }
-
-            if (item.quantity <= 0) { // যদিও Math.max(1,...) ব্যবহার করলে এটি 0 হবে না, তবুও সেফটির জন্য রাখা হলো।
-                removeFromCart(cartItemId);
-            } else {
-                saveCart();
-                updateCartUI(); // UI সম্পূর্ণ রি-রেন্ডার করার জন্য
-            }
-        }
-    }
-
-    // Render cart items in the sidebar
-// Render cart items in the sidebar
-function renderCartItems() {
-    if (!cartItemsContainer || !noProductsMessage) return;
-
-    cartItemsContainer.innerHTML = ''; // Clear previous items
-
-    if (cart.length === 0) {
-        noProductsMessage.style.display = 'block';
-        if (continueShoppingDiv) continueShoppingDiv.style.display = 'none';
-    } else {
-        noProductsMessage.style.display = 'none';
-        if (continueShoppingDiv) continueShoppingDiv.style.display = 'block';
-        cart.forEach(item => {
-            const itemDiv = document.createElement('div');
-            // এখানে items-start রাখা হলো যাতে টেক্সট উপরে অ্যালাইন থাকে
-            itemDiv.classList.add('flex', 'items-start', 'mb-4', 'border-b', 'pb-4');
-
-            itemDiv.innerHTML = `
-                <img src="${item.image}" alt="${item.name}" class="w-20 h-20 object-cover rounded-md mr-4 flex-shrink-0">
-                <div class="flex-grow">
-                    <h4 class="text-gray-800 font-semibold text-base">${item.name}</h4>
-                    <p class="text-gray-600 text-xs mt-0.5">Size: ${item.size || 'N/A'}</p>
-                    <div class="flex items-center mt-2">
-                        <div class="flex items-center border border-gray-200 rounded-lg overflow-hidden shadow-sm">
-                            <button class="sidebar-quantity-minus-btn flex items-center justify-center h-8 w-8 bg-gray-50 hover:bg-gray-100 text-gray-700 font-bold text-lg cursor-pointer transition duration-200" data-cart-item-id="${item.cartId}">-</button>
-                            <input type="number"
-                                class="w-12 h-8 text-center border-x border-gray-200 focus:outline-none sidebar-quantity-input text-gray-800 font-medium text-base"
-                                value="${item.quantity}"
-                                min="1"
-                                data-cart-item-id="${item.cartId}"
-                                readonly>
-                            <button class="sidebar-quantity-plus-btn flex items-center justify-center h-8 w-8 bg-gray-50 hover:bg-gray-100 text-gray-700 font-bold text-lg cursor-pointer transition duration-200" data-cart-item-id="${item.cartId}">+</button>
-                        </div>
-                        <span class="ml-3 text-gray-900 font-semibold text-base">৳ ${(item.price * item.quantity).toLocaleString()}</span>
-                    </div>
-                </div>
-                <button class="text-gray-400 hover:text-red-500 remove-item-btn ml-auto flex-shrink-0" data-cart-item-id="${item.cartId}">
-                    <span class="material-symbols-outlined text-xl">close</span>
-                </button>
-            `;
-            cartItemsContainer.appendChild(itemDiv);
-        });
-    }
-}
-
-    // Calculate and update cart total and item count
-    function updateCartUI() {
-        renderCartItems(); // রেন্ডার করার আগে
-        let totalItems = 0;
-        let subtotal = 0;
-
-        cart.forEach(item => {
-            totalItems += item.quantity;
-            subtotal += item.quantity * item.price;
-        });
-
-        if (itemCountSpan) {
-            itemCountSpan.textContent = totalItems; // ব্যাজ আপডেট
-        }
-        if (cartSubtotalSpan) {
-            cartSubtotalSpan.textContent = `৳ ${subtotal.toLocaleString()}`; // সাবটোটাল আপডেট
-        }
-
-        // Add event listeners to newly rendered items
-        document.querySelectorAll('.remove-item-btn').forEach(button => {
-            button.addEventListener('click', (event) => {
-                const cartItemId = event.currentTarget.dataset.cartItemId;
-                removeFromCart(cartItemId);
-            });
-        });
-
-        // সাইডবারের Quantity input এর জন্য ইভেন্ট লিসেনার (যদি ম্যানুয়াল টাইপিং অনুমতি দেন)
-        document.querySelectorAll('.sidebar-quantity-input').forEach(input => {
-            input.addEventListener('change', (event) => {
-                const cartItemId = event.currentTarget.dataset.cartItemId;
-                const newQuantity = parseInt(event.currentTarget.value);
-                updateQuantity(cartItemId, newQuantity);
-            });
-        });
-
-        // সাইডবারের Quantity minus button এর জন্য ইভেন্ট লিসেনার
-        document.querySelectorAll('.sidebar-quantity-minus-btn').forEach(button => {
-            button.addEventListener('click', (event) => {
-                const cartItemId = event.currentTarget.dataset.cartItemId;
-                // যেহেতু renderCartItems() আবার কল হচ্ছে, তাই ইনপুট ভ্যালু সরাসরি সেট না করলেও চলবে
-                // কারণ নতুন রেন্ডারে সঠিক ভ্যালু চলে আসবে।
-                const currentItem = cart.find(item => item.cartId === cartItemId);
-                if (currentItem && currentItem.quantity > 1) {
-                    updateQuantity(cartItemId, currentItem.quantity - 1);
-                }
-            });
-        });
-
-        // সাইডবারের Quantity plus button এর জন্য ইভেন্ট লিসেনার
-        document.querySelectorAll('.sidebar-quantity-plus-btn').forEach(button => {
-            button.addEventListener('click', (event) => {
-                const cartItemId = event.currentTarget.dataset.cartItemId;
-                // যেহেতু renderCartItems() আবার কল হচ্ছে, তাই ইনপুট ভ্যালু সরাসরি সেট না করলেও চলবে
-                const currentItem = cart.find(item => item.cartId === cartItemId);
-                if (currentItem) {
-                    updateQuantity(cartItemId, currentItem.quantity + 1);
-                }
-            });
-        });
-    }
-
-    // --- Event Listeners for "Add to Cart" buttons and Modals ---
-    document.addEventListener('DOMContentLoaded', () => {
-        loadCart(); // DOM প্রস্তুত হলে কার্ট লোড করুন
-
-        // পণ্য পৃষ্ঠার Quantity Plus/Minus buttons (মডালের ভিতরে)
-        document.querySelectorAll('.quantity-minus-btn').forEach(button => {
-            button.addEventListener('click', (event) => {
-                const input = event.target.nextElementSibling;
-                let currentValue = parseInt(input.value);
-                if (currentValue > 1) {
-                    input.value = currentValue - 1;
-                }
-            });
-        });
-
-        document.querySelectorAll('.quantity-plus-btn').forEach(button => {
-            button.addEventListener('click', (event) => {
-                const input = event.target.previousElementSibling;
-                let currentValue = parseInt(input.value);
-                input.value = currentValue + 1;
-            });
-        });
-
-        // Add to Cart বোতামগুলির জন্য ইভেন্ট লিসেনার
-        document.querySelectorAll('.add-to-cart-btn').forEach(button => {
-            button.addEventListener('click', (event) => {
-                const parentElement = event.currentTarget.closest('.product-card') || event.currentTarget.closest('.product-options-modal');
-
-                if (!parentElement) {
-                    console.error("Parent element not found for add to cart button.");
-                    return;
-                }
-
-                const productId = event.currentTarget.dataset.productId;
-                const productName = event.currentTarget.dataset.productName;
-                const productPrice = parseFloat(event.currentTarget.dataset.productPrice);
-                const productImage = event.currentTarget.dataset.productImage;
-
-                const quantityInput = parentElement.querySelector('.quantity-input');
-                const quantity = parseInt(quantityInput.value);
-
-                const sizeSelect = parentElement.querySelector('.product-size-select');
-                const selectedSize = sizeSelect ? sizeSelect.value : '';
-
-                if (sizeSelect && sizeSelect.options.length > 1 && selectedSize === "") {
-                    alert('Please select a size before adding to cart.');
-                    return;
-                }
-
-                const product = {
-                    id: productId,
-                    name: productName,
-                    price: productPrice,
-                    image: productImage
-                };
-                addToCart(product, quantity, selectedSize);
-
-                const modal = event.currentTarget.closest('.product-options-modal');
-                if (modal) {
-                    modal.classList.add('hidden');
-                    modal.classList.remove('flex');
-                }
-            });
-        });
-
-        // Modal (product-options-modal) হ্যান্ডলিং
-        document.querySelectorAll('.select-options-btn').forEach(button => {
-            button.addEventListener('click', (event) => {
-                const modalId = button.dataset.modalTarget;
-                const modal = document.getElementById(modalId);
-
-                if (modal) {
-                    modal.classList.remove('hidden');
-                    modal.classList.add('flex');
-                } else {
-                    console.error(`Modal with ID '${modalId}' not found.`);
-                }
-            });
-        });
-
-        document.querySelectorAll('.close-modal-btn').forEach(button => {
-            button.addEventListener('click', (event) => {
-                const modal = event.currentTarget.closest('.product-options-modal');
-                if (modal) {
-                    modal.classList.add('hidden');
-                    modal.classList.remove('flex');
-                }
-            });
-        });
-
-        // মডালের বাইরে ক্লিক করলে মডাল বন্ধ করুন
-        document.addEventListener('click', (event) => {
-            document.querySelectorAll('.product-options-modal').forEach(modal => {
-                const selectOptionsBtn = modal.closest('.product-card') ? modal.closest('.product-card').querySelector('.select-options-btn') : null;
-
-                if (selectOptionsBtn && !modal.contains(event.target) && !selectOptionsBtn.contains(event.target) && !modal.classList.contains('hidden')) {
-                    modal.classList.add('hidden');
-                    modal.classList.remove('flex');
-                }
-            });
-        });
-
-        // মডালের ভেতরের ক্লিক মডাল বন্ধ করা থেকে বিরত রাখবে
-        document.querySelectorAll('.product-options-modal').forEach(modal => {
-            modal.addEventListener('click', (event) => {
-                event.stopPropagation();
-            });
-        });
-    });
-</script> --}}
-{{-- add to cart end --}}
-
 
 
     {{-- js for add cart and cart page and quick view  --}}
@@ -1190,4 +849,42 @@ function renderCartItems() {
 
 })();
 </script>
+
+{{-- js for menu bton  --}}
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const menuButton = document.getElementById('menu-btn');
+        const menu_sidebar = document.getElementById('side-menu-front');
+        const closeSidebarButton = document.getElementById('closeSidebarButton');
+        const body = document.body;
+
+        const openSidebar = () => {
+            menu_sidebar.classList.remove('-translate-x-full');
+            menu_sidebar.classList.add('translate-x-0');
+            body.classList.add('overflow-hidden', 'fixed', 'w-screen', 'h-screen', 'inset-0');
+        };
+
+        const closeSidebar = () => {
+            menu_sidebar.classList.add('-translate-x-full');
+            menu_sidebar.classList.remove('translate-x-0');
+            body.classList.remove('overflow-hidden', 'fixed', 'w-screen', 'h-screen', 'inset-0');
+        };
+
+        if (menuButton) {
+            menuButton.addEventListener('click', openSidebar);
+        }
+
+        if (closeSidebarButton) {
+            closeSidebarButton.addEventListener('click', closeSidebar);
+        }
+
+        window.addEventListener('resize', () => {
+            if (window.innerWidth >= 640) {
+                closeSidebar();
+                body.classList.remove('overflow-hidden', 'fixed', 'w-screen', 'h-screen', 'inset-0');
+            }
+        });
+    });
+</script>
+
 @endpush
