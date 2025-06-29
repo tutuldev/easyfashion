@@ -10,10 +10,7 @@
                 placeholder="TYPE TO SEARCH.." autocomplete="off" />
         </form>
 
-        {{-- সার্চ ফলাফল দেখানোর জন্য এই নতুন div যোগ করুন --}}
-        <div id="searchResultsContainer" class="flex-grow overflow-y-auto">
-            <p class="text-center text-gray-500 mt-10">আপনার সার্চ ফলাফল এখানে দেখাবে।</p>
-        </div>
+
 
         <p class="text-base uppercase font-semibold text-gray-600 mt-5">Trending</p>
         <div class="flex flex-wrap gap-3 mt-3 text-center ">
@@ -43,6 +40,10 @@
                 class=" text-black border-gray-400 font-medium px-3 py-1.5 rounded-sm text-sm cursor-pointer border trending-tag">denim</span>
         </div>
 
+             {{-- সার্চ ফলাফল দেখানোর জন্য এই নতুন div যোগ করুন --}}
+        <div id="searchResultsContainer" class="flex-grow overflow-y-auto">
+            <p class="text-center text-gray-500 mt-10">আপনার সার্চ ফলাফল এখানে দেখাবে।</p>
+        </div>
     </div>
 </div>
 
