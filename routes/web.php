@@ -6,6 +6,7 @@ use App\Http\Controllers\Frontend\FroProductController;
 use App\Http\Controllers\Frontend\HomeController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SearchController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/product-category', function () {
@@ -58,8 +59,6 @@ Route::get('/cart', function () {
 Route::get('/checkout', function () {
     return view('checkout');
 });
-
-
 
 
 require __DIR__.'/auth.php';

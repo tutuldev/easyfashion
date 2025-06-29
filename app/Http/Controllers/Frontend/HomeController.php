@@ -27,7 +27,8 @@ class HomeController extends Controller
             'products' => $polo_products,
             'trendingCategories' => $trendingCategories,
             'commonCategories' => $commonCategories,
-            'justin_products' => $justin_products, 
+            'justin_products' => $justin_products,
         ]);
     }
+    
 }

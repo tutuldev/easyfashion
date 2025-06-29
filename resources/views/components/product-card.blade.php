@@ -68,7 +68,7 @@
                     </div>
                 </div>
 
-                <div class="flex items-center space-x-1 xl:space-x-3 mb-4">
+                <div class="flex items-center space-x-1 xl:space-x-2 justify-between mb-4 ">
                     <div class="flex border border-gray-300 rounded overflow-hidden">
                         <button class="quantity-minus-btn px-3 py-1 bg-gray-100 hover:bg-gray-200">-</button>
                         <input type="text" value="1" class="quantity-input w-12 text-center border-x border-gray-300 focus:outline-none" readonly>
