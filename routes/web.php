@@ -6,7 +6,8 @@ use App\Http\Controllers\Frontend\FroProductController;
 use App\Http\Controllers\Frontend\HomeController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\SearchController;
+use App\Http\Controllers\Frontend\SearchController;
+// use App\Http\Controllers\Frontend\SearchController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/product-category', function () {
@@ -59,6 +60,10 @@ Route::get('/cart', function () {
 Route::get('/checkout', function () {
     return view('checkout');
 });
+
+
+// search
+Route::get('/search', [SearchController::class, 'search'])->name('search');
 
 
 require __DIR__.'/auth.php';
