@@ -10,8 +10,6 @@
                 placeholder="TYPE TO SEARCH.." autocomplete="off" />
         </form>
 
-
-
         <p class="text-base uppercase font-semibold text-gray-600 mt-5">Trending</p>
         <div class="flex flex-wrap gap-3 mt-3 text-center ">
             <span
@@ -40,7 +38,7 @@
                 class=" text-black border-gray-400 font-medium px-3 py-1.5 rounded-sm text-sm cursor-pointer border trending-tag">denim</span>
         </div>
 
-             {{-- সার্চ ফলাফল দেখানোর জন্য এই নতুন div যোগ করুন --}}
+        {{-- সার্চ ফলাফল দেখানোর জন্য এই নতুন div যোগ করুন --}}
         <div id="searchResultsContainer" class="flex-grow overflow-y-auto">
             <p class="text-center text-gray-500 mt-10">আপনার সার্চ ফলাফল এখানে দেখাবে।</p>
         </div>
@@ -70,7 +68,7 @@
             const persionLogin = document.getElementById('persion-login');
             const homeBtn = document.getElementById('home-btn');
             const eventBtn = document.getElementById('event-btn');
-            const shopBtn = document.getElementById('shop-btn'); // আপনার পূর্বের কোডে goshopBtn ছিল, এখানে shopBtn ধরে নিচ্ছি
+            const shopBtn = document.getElementById('shop-btn');
             const easyBtn = document.getElementById('easy-btn');
             const howtoBtn = document.getElementById('howto-btn');
 
@@ -219,7 +217,7 @@
                 const searchForm = document.getElementById('searchForm');
                 if (searchForm) {
                     searchForm.addEventListener('submit', function(event) {
-                        event.preventDefault(); // ফর্ম সাবমিট হওয়া আটকান (পেজ রিলোড হবে না)
+                        event.preventDefault(); // ফর্ম সাবমিট হওয়া আটকান (পেজ রিলোড হবে না)
                         const query = searchInputField.value.trim();
                         if (query.length > 2) {
                             performSearch(query);
@@ -227,7 +225,6 @@
                     });
                 }
             }
-
 
             function performSearch(query) {
                 if (!searchResultsContainer) return; // কন্টেইনার না থাকলে সার্চের দরকার নেই
@@ -261,13 +258,12 @@
             function displaySearchResults(products) {
                 let resultsHtml = '';
                 if (products.length > 0) {
-                    // এখানে আপনার প্রোডাক্ট কার্ডের ডিজাইন থাকবে।
-                    // আমি একটি সাধারণ গ্রিড উদাহরণ দিচ্ছি।
                     resultsHtml += '<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mt-5">';
                     products.forEach(product => {
                         resultsHtml += `
-                            <a href="/products/${product.slug}" class="block border rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-200">
-                                <img src="${product.image_url || '/images/placeholder.jpg'}" alt="${product.name}" class="w-full h-40 object-cover">
+                            <a href="/product/${product.id}" class="block border rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-200">
+                                {{-- এখানে সরাসরি product.image_url ব্যবহার করা হচ্ছে, কারণ এটি কন্ট্রোলার থেকে পূর্ণাঙ্গ URL হিসেবে আসবে --}}
+                                <img src="${product.image_url}" alt="${product.name}" class="w-full h-40 object-cover">
                                 <div class="p-2">
                                     <h4 class="text-sm font-semibold text-gray-800 truncate">${product.name}</h4>
                                     <p class="text-xs text-gray-600">${product.category_name || 'Uncategorized'}</p>

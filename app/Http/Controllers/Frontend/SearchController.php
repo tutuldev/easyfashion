@@ -4,50 +4,61 @@ namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Product; // আপনার প্রোডাক্ট মডেলের পাথটি নিশ্চিত করুন
+use App\Models\Product;
+use Illuminate\Support\Str;
 
 class SearchController extends Controller
 {
-    /**
-     * Handle the AJAX search request.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function search(Request $request)
     {
-        // সার্চ কোয়েরি ইনপুট থেকে নেওয়া হচ্ছে
         $query = $request->input('query');
 
-        // যদি কোয়েরি খালি হয় অথবা 3 অক্ষরের কম হয়, তাহলে কোনো ফলাফল না দিয়ে খালি অ্যারে ফেরত পাঠানো হচ্ছে
         if (empty($query) || strlen($query) < 3) {
             return response()->json([]);
         }
 
-        // প্রোডাক্ট মডেলে সার্চ লজিক
-        // 'name' অথবা 'description' কলামে সার্চ করা হচ্ছে,
-        // এবং 'category' রিলেশনশিপের 'name' কলামেও সার্চ করা হচ্ছে।
-        // সর্বোচ্চ 10টি ফলাফল ফেরত পাঠানো হবে।
         $products = Product::where('name', 'LIKE', "%{$query}%")
                             ->orWhere('description', 'LIKE', "%{$query}%")
                             ->orWhereHas('category', function ($q) use ($query) {
                                 $q->where('name', 'LIKE', "%{$query}%");
                             })
-                            ->limit(10) // আপনার প্রয়োজন অনুযায়ী limit পরিবর্তন করতে পারেন
+                            ->limit(10)
                             ->get()
                             ->map(function ($product) {
-                                // প্রতিটি প্রোডাক্টের জন্য প্রয়োজনীয় ডেটা ফরম্যাট করা হচ্ছে
+                                $firstImage = null;
+
+                                // ✅ এখানে আপডেট করা হয়েছে: সরাসরি $product->images-কে অ্যারে হিসেবে চেক করুন
+                                // কারণ Product মডেলে 'images' কলামকে 'array' হিসেবে কাস্ট করা হয়েছে।
+                                // এটি নিশ্চিত করবে যে $product->images সবসময় হয় একটি অ্যারে, অথবা null হবে।
+                                if (is_array($product->images) && !empty($product->images)) {
+                                    $firstImage = $product->images[0]; // অ্যারের প্রথম ইমেজ পাথটি নিন
+                                }
+                                // আমরা 'is_string' চেকটি সরিয়ে দিচ্ছি, কারণ কাস্টের কারণে এটি অপ্রয়োজনীয়।
+                                // যদি কাস্ট না থাকত, তাহলে এই চেকটি দরকার হতো।
+
+                                $imageUrl = asset('images/default.webp'); // Default fallback URL
+
+                                if ($firstImage) { // যদি একটি প্রথম ইমেজ পাথ পাওয়া যায়
+                                    // যদি পাথ 'products/' দিয়ে শুরু হয়, তবে এটি storage/app/public থেকে
+                                    if (Str::startsWith($firstImage, 'products/')) {
+                                        $imageUrl = asset('storage/' . $firstImage);
+                                    }
+                                    // অন্যথায়, এটি সম্ভবত public ফোল্ডারের রুট থেকে (যেমন seeder-এর ইমেজ)
+                                    else {
+                                        $imageUrl = asset($firstImage);
+                                    }
+                                }
+
                                 return [
                                     'id' => $product->id,
                                     'name' => $product->name,
                                     'price' => $product->price,
-                                    'image_url' => $product->image ? asset('storage/' . $product->image) : '/images/placeholder.jpg',
+                                    'image_url' => $imageUrl, // ফাইনাল URL
                                     'slug' => $product->slug,
                                     'category_name' => $product->category->name ?? 'Uncategorized',
                                 ];
                             });
 
-        // JSON ফরম্যাটে ফলাফল ফেরত পাঠানো হচ্ছে
         return response()->json($products);
     }
 }
