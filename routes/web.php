@@ -67,6 +67,10 @@ Route::get('/search', [SearchController::class, 'search'])->name('search');
 
 // shop page
 Route::get('/shop', [ShopController::class, 'index'])->name('shop.index');
+//how to order page
+Route::get('/how-to-order', function () {
+    return view('how-to-order');
+});
 
 
 
