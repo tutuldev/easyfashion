@@ -25,7 +25,7 @@
 
 
 
-<div id="videoPopup" class="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 hidden">
+<div id="videoPopup" class="fixed inset-0 bg-black bg-opacity-80  items-center justify-center z-50 hidden">
     <div class="relative w-screen h-[90vh] ">
         <button id="closePopupButton" class="absolute -top-10 right-0 text-white text-3xl md:-right-10 md:top-0 md:text-5xl z-50 focus:outline-none">
             ×
@@ -53,17 +53,22 @@
 
         playButton.addEventListener('click', function() {
             videoPopup.classList.remove('hidden');
+            videoPopup.classList.add('flex');
             youtubeIframe.src = videoEmbedUrl + '?autoplay=1';
         });
 
         closePopupButton.addEventListener('click', function() {
             videoPopup.classList.add('hidden');
+            videoPopup.classList.remove('flex');
+
             youtubeIframe.src = '';
         });
 
         videoPopup.addEventListener('click', function(event) {
             if (event.target === videoPopup) {
                 videoPopup.classList.add('hidden');
+                videoPopup.classList.remove('flex');
+
                 youtubeIframe.src = '';
             }
         });
@@ -71,6 +76,8 @@
         document.addEventListener('keydown', function(event) {
             if (event.key === 'Escape' && !videoPopup.classList.contains('hidden')) {
                 videoPopup.classList.add('hidden');
+                videoPopup.classList.remove('flex');
+
                 youtubeIframe.src = '';
             }
         });

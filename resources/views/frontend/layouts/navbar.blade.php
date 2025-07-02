@@ -40,7 +40,7 @@
 
                 <!-- Easy -->
                 <div class="relative group">
-                    <a href="{{ url('/easy') }}" id="easy-btn"
+                    <a href="#" id="easy-btn"
                         class="relative  overflow-hidden py-1 inline-block {{ request()->is('easy') ? 'group-hover:text-black text-black' : '' }}">
                         EASY
                         <span class="absolute bottom-0 left-0 h-[3px] w-full {{ request()->is('/') ? 'bg-white' : 'bg-black' }} transition-transform duration-300 ease-in-out
