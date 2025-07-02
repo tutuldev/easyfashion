@@ -16,7 +16,7 @@
                 </a>
 
                 <!-- EID AL-ADHA 25 -->
-                <a href="{{ url('/offer') }}" id="event-btn"
+                <a href="{{ route('category.single.show', 'polo') }}" id="event-btn"
                     class="relative group overflow-hidden py-1 {{ request()->is('offer') ? 'text-white' : '' }}">
                     EID AL-ADHA 25
                     <span class="absolute bottom-0 left-0 h-[3px] w-full {{ request()->is('/') ? 'bg-white' : 'bg-black' }} transition-transform duration-300 ease-in-out
@@ -25,26 +25,47 @@
                 </a>
 
                 <!-- Shop -->
+
                 <a href="{{ url('/shop') }}" id="shop-btn"
-                    class="relative group overflow-hidden py-1 {{ request()->is('shop') ? 'text-white' : '' }}">
+                    class="relative group overflow-hidden py-1 px-4 inline-block {{ request()->is('shop') ? 'text-black' : '' }}">
                     SHOP
-                    <span class="absolute bottom-0 left-0 h-[3px] w-full {{ request()->is('/') ? 'bg-white' : 'bg-black' }} transition-transform duration-300 ease-in-out
-                            origin-right scale-x-0 group-hover:origin-left group-hover:scale-x-100
-                            {{ request()->is('shop') ? 'scale-x-100 origin-left' : '' }}"></span>
+                    <span class="absolute bottom-0 left-0 h-[3px] w-full
+                        {{ request()->is('/') ? 'bg-white' : 'bg-black' }}
+                        transition-transform duration-300 ease-in-out
+                        origin-right scale-x-0 group-hover:origin-left group-hover:scale-x-100
+                        {{ request()->is('shop') ? 'scale-x-100 origin-left' : '' }}"></span>
                 </a>
 
+
+
                 <!-- Easy -->
-                <a href="{{ url('/easy') }}" id="easy-btn"
-                    class="relative group overflow-hidden py-1 {{ request()->is('easy') ? 'text-white' : '' }}">
-                    EASY
-                    <span class="absolute bottom-0 left-0 h-[3px] w-full {{ request()->is('/') ? 'bg-white' : 'bg-black' }} transition-transform duration-300 ease-in-out
-                            origin-right scale-x-0 group-hover:origin-left group-hover:scale-x-100
-                            {{ request()->is('easy') ? 'scale-x-100 origin-left' : '' }}"></span>
-                </a>
+                <div class="relative group">
+                    <a href="{{ url('/easy') }}" id="easy-btn"
+                        class="relative  overflow-hidden py-1 inline-block {{ request()->is('easy') ? 'group-hover:text-black text-black' : '' }}">
+                        EASY
+                        <span class="absolute bottom-0 left-0 h-[3px] w-full {{ request()->is('/') ? 'bg-white' : 'bg-black' }} transition-transform duration-300 ease-in-out
+                                origin-right scale-x-0 group-hover:origin-left group-hover:scale-x-100
+                                {{ request()->is('easy') ? 'scale-x-100 origin-left' : '' }}"></span>
+                    </a>
+
+                    <!-- Dropdown -->
+                    <div
+                        class="absolute left-0 mt-2 w-80 bg-white border border-gray-200 rounded-md shadow-lg opacity-0 group-hover:opacity-100 invisible group-hover:visible transition-all duration-300 translate-y-2 group-hover:translate-y-0 z-50">
+                        <div class="p-8">
+                        <a href="{{ url('/about') }}" class="block px-3 py-3  text-sm text-gray-700 hover:bg-gray-100">About Us</a>
+                        <a href="{{ url('/contact') }}" class="block px-3 py-3 text-sm text-gray-700 hover:bg-gray-100">Contact Us</a>
+                        <a href="{{ url('/contact') }}" class="block px-3 py-3 text-sm text-gray-700 hover:bg-gray-100">Size Guid</a>
+                        <a href="{{ url('/contact') }}" class="block px-3 py-3 text-sm text-gray-700 hover:bg-gray-100">Order,Payment,Shipping &    Policies</a>
+                        <a href="{{ url('/contact') }}" class="block px-3 py-3 text-sm text-gray-700 hover:bg-gray-100">Order Tracking</a>
+                        <a href="{{ url('/contact') }}" class="block px-3 py-3 text-sm text-gray-700 hover:bg-gray-100">SHOP Outlate Locations</a>
+                        </div>
+                    </div>
+                </div>
+
 
                 <!-- How to Order -->
                 <a href="{{ url('/how-to-order') }}" id="howto-btn"
-                    class="relative group overflow-hidden py-1 {{ request()->is('how-to-order') ? 'text-white' : '' }}">
+                    class="relative group overflow-hidden py-1 {{ request()->is('how-to-order') ? 'text-black' : '' }}">
                     How to Order
                     <span class="absolute bottom-0 left-0 h-[3px] w-full {{ request()->is('/') ? 'bg-white' : 'bg-black' }} transition-transform duration-300 ease-in-out
                             origin-right scale-x-0 group-hover:origin-left group-hover:scale-x-100
@@ -166,7 +187,119 @@
         </div>
     </div>
 </nav>
+{{-- when shop hover then open this section --}}
+<!-- Smooth Mega Menu -->
+<div id="shop-mega-menu"
+     class="invisible opacity-0 translate-y-5 transition-all duration-300 ease-in-out relative z-50 mx-auto max-w-screen-xl px-3 lg:px-5">
+    <div class="absolute left-0 w-full mt-12 px-4 py-5">
+        <div class="flex py-5 gap-6 bg-white shadow-md rounded-md">
+
+            <div class="bg-white py-12">
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-32 px-20">
+            <div>
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">PANJABI</h3>
+                <ul class="space-y-2">
+                    <li><a href="#" class="text-gray-600 hover:text-gray-900">Easy Design Panjabi</a></li>
+                    <li><a href="#" class="text-gray-600 hover:text-gray-900">Easy Karchupi Panjabi</a></li>
+                    <li><a href="#" class="text-gray-600 hover:text-gray-900">Kabli Panjabi Set</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">T - SHIRTS</h3>
+                <ul class="space-y-2">
+                    <li><a href="#" class="text-gray-600 hover:text-gray-900">Printed T-Shirt</a></li>
+                    <li><a href="#" class="text-gray-600 hover:text-gray-900">Polo T-Shirt</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">SHIRTS</h3>
+                <ul class="space-y-2">
+                    <li><a href="#" class="text-gray-600 hover:text-gray-900">Casual Shirt</a></li>
+                    <li><a href="#" class="text-gray-600 hover:text-gray-900">Formal Shirt</a></li>
+                    <li><a href="#" class="text-gray-600 hover:text-gray-900">Half Shirt</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">JUNIOR</h3>
+                <ul class="space-y-2">
+                    <li><a href="#" class="text-gray-600 hover:text-gray-900">Boys Full Shirt</a></li>
+                    <li><a href="#" class="text-gray-600 hover:text-gray-900">Boys Half Shirt</a></li>
+                    <li><a href="#" class="text-gray-600 hover:text-gray-900">Boys Polo T-Shirt</a></li>
+                    <li><a href="#" class="text-gray-600 hover:text-gray-900">Boys T-Shirt</a></li>
+                    <li><a href="#" class="text-gray-600 hover:text-gray-900">Boys Panjabi</a></li>
+                    <li><a href="#" class="text-gray-600 hover:text-gray-900">Girls T-Shirt</a></li>
+                    <li><a href="#" class="text-gray-600 hover:text-gray-900">Girls Frock</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">ACCESSORIES</h3>
+                <ul class="space-y-2">
+                    <li><a href="#" class="text-gray-600 hover:text-gray-900">Belt</a></li>
+                    <li><a href="#" class="text-gray-600 hover:text-gray-900">Easy Tie</a></li>
+                    <li><a href="#" class="text-gray-600 hover:text-gray-900">Men's Underwear</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">PANTS</h3>
+                <ul class="space-y-2">
+                    <li><a href="#" class="text-gray-600 hover:text-gray-900">Gabardine Pants</a></li>
+                    <li><a href="#" class="text-gray-600 hover:text-gray-900">Jeans</a></li>
+                    <li><a href="#" class="text-gray-600 hover:text-gray-900">Formal Pants</a></li>
+                    <li><a href="#" class="text-gray-600 hover:text-gray-900">Pajama</a></li>
+                    <li><a href="#" class="text-gray-600 hover:text-gray-900">Shorts</a></li>
+                    <li><a href="#" class="text-gray-600 hover:text-gray-900">Trousers</a></li>
+                </ul>
+            </div>
+        </div>
+
+</div>
+        </div>
+    </div>
+</div>
+
+
+
+
 @push('scripts')
+{{-- script  for show hover --}}
+    <script>
+    const shopBtn = document.getElementById('shop-btn');
+    const megaMenu = document.getElementById('shop-mega-menu');
+
+    // Show menu on hover
+    shopBtn.addEventListener('mouseenter', () => {
+        megaMenu.classList.remove('invisible', 'opacity-0', 'translate-y-5');
+        megaMenu.classList.add('visible', 'opacity-100', 'translate-y-0');
+    });
+
+    // Hide on mouse leave
+    shopBtn.addEventListener('mouseleave', () => {
+        setTimeout(() => {
+            if (!megaMenu.matches(':hover')) {
+                megaMenu.classList.remove('visible', 'opacity-100', 'translate-y-0');
+                megaMenu.classList.add('invisible', 'opacity-0', 'translate-y-5');
+            }
+        }, 200);
+    });
+
+    megaMenu.addEventListener('mouseenter', () => {
+        megaMenu.classList.remove('invisible', 'opacity-0', 'translate-y-5');
+        megaMenu.classList.add('visible', 'opacity-100', 'translate-y-0');
+    });
+
+    megaMenu.addEventListener('mouseleave', () => {
+        megaMenu.classList.remove('visible', 'opacity-100', 'translate-y-0');
+        megaMenu.classList.add('invisible', 'opacity-0', 'translate-y-5');
+    });
+    </script>
+
+
     {{-- wish list --}}
     <script>
         // এই Set টি ট্র্যাক করে কোন item.id গুলো wishlist এ আছে
