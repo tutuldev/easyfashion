@@ -87,6 +87,61 @@ class OrderController extends Controller
         }
     }
 
+    public function edit($id)
+{
+    try {
+        $order = Order::findOrFail($id);
+
+        return view('backend.orders.edit', compact('order'));
+
+    } catch (\Exception $e) {
+        Log::error('Order edit load failed: ' . $e->getMessage());
+        return redirect()->back()->with('error', 'Order not found or failed to load edit page.');
+    }
+}
+
+public function update(Request $request, $id)
+{
+    $validatedData = $request->validate([
+        'customer_name' => 'required|string|max:255',
+        'customer_phone' => 'required|string|max:20',
+        'customer_email' => 'nullable|email|max:255',
+        'delivery_address' => 'required|string|max:500',
+        'district' => 'required|string|max:255',
+        'postcode' => 'nullable|string|max:255',
+        'order_notes' => 'nullable|string',
+        'payment_method' => 'required|string|in:cash_on_delivery,mobile_banking',
+        'payment_status' => 'required|string|in:pending,paid',
+        'order_status' => 'required|string|in:pending,shipped,delivered',
+    ]);
+
+    try {
+        $order = Order::findOrFail($id);
+
+        $order->update([
+            'customer_name' => $validatedData['customer_name'],
+            'customer_phone' => $validatedData['customer_phone'],
+            'customer_email' => $validatedData['customer_email'],
+            'delivery_address' => $validatedData['delivery_address'],
+            'district' => $validatedData['district'],
+            'postcode' => $validatedData['postcode'],
+            'order_notes' => $validatedData['order_notes'],
+            'payment_method' => $validatedData['payment_method'],
+            'payment_status' => $validatedData['payment_status'],
+            'order_status' => $validatedData['order_status'],
+        ]);
+
+        // ✅ Redirect to order list
+        return redirect()->route('orders.index')->with('success', 'Order updated successfully!');
+
+    } catch (\Exception $e) {
+        Log::error('Order update failed: ' . $e->getMessage());
+        return back()->withErrors(['error' => 'Something went wrong. Please try again.']);
+    }
+}
+
+
+
     /**
      * Display the specified order confirmation.
      * এই মেথডটি আপনার কন্ট্রোলারে যোগ করা প্রয়োজন।
