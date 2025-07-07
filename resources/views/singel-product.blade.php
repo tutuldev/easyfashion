@@ -16,19 +16,19 @@
                                 : asset($img))
                             : asset('images/default.webp');
                     @endphp
-                <img id="quickview-product-image" src="{{ asset($imgUrl) }}" alt="{{ $product->name }}" class="max-w-full h-auto object-contain">
+                <img id="singel-product-quickview-product-image" src="{{ asset($imgUrl) }}" alt="{{ $product->name }}" class="max-w-full h-auto object-contain">
             </div>
 
             <div class="md:w-1/2 flex flex-col  bg-sky-100 p-10">
                 <div>
-                    <h2 id="quickview-product-name" class="text-5xl font-semibold mb-4">{{ $product->name }}</h2>
-                    <p id="quickview-product-price" class="text-xl font-bold mb-4">৳{{ number_format($product->price, 0, '.', ',') }}</p>
+                    <h2 id="singel-product-quickview-product-name" class="text-5xl font-semibold mb-4">{{ $product->name }}</h2>
+                    <p id="singel-product-quickview-product-price" class="text-xl font-bold mb-4">৳{{ number_format($product->price, 0, '.', ',') }}</p>
 
-                     <div id="quickview-size-container" class="mb-4">
+                     <div id="singel-product-quickview-size-container" class="mb-4">
 
-                        <label for="quickview-size-select" class="block text-gray-700 text-sm font-bold mb-2">SIZE:</label>
+                        <label for="singel-product-quickview-size-select" class="block text-gray-700 text-sm font-bold mb-2">SIZE:</label>
 
-                        <select id="quickview-size-select" class="product-size-select block w-full border border-gray-400 px-4 py-2 rounded shadow focus:outline-none">
+                        <select id="singel-product-quickview-size-select" class="product-size-select block w-full border border-gray-400 px-4 py-2 rounded shadow focus:outline-none">
 
                             <option value="">Choose an option</option>
 
@@ -45,12 +45,12 @@
                     </div>
 
                     <div class="flex items-center mb-6 border border-gray-300 rounded overflow-hidden w-32 h-10">
-                        <button id="quickview-quantity-minus-btn" class="quantity-minus-btn w-10 h-full text-lg text-gray-600 hover:bg-gray-100 bg-white">−</button>
-                        <input type="text" id="quickview-quantity-input" value="1" class="quantity-input w-12 text-center border-l border-r border-gray-300 h-full focus:outline-none" readonly>
-                        <button id="quickview-quantity-plus-btn" class="quantity-plus-btn w-10 h-full text-lg text-gray-600 hover:bg-gray-100 bg-white">+</button>
+                        <button id="singel-product-quickview-quantity-minus-btn" class="quantity-minus-btn w-10 h-full text-lg text-gray-600 hover:bg-gray-100 bg-white">−</button>
+                        <input type="text" id="singel-product-quickview-quantity-input" value="1" class="quantity-input w-12 text-center border-l border-r border-gray-300 h-full focus:outline-none" readonly>
+                        <button id="singel-product-quickview-quantity-plus-btn" class="quantity-plus-btn w-10 h-full text-lg text-gray-600 hover:bg-gray-100 bg-white">+</button>
                     </div>
 
-                    <button id="quickview-add-to-cart-btn" class="add-to-cart-btn bg-black text-white px-6 py-3 rounded-md hover:bg-gray-800 transition-colors duration-300 w-full mb-4"
+                    <button id="singel-product-quickview-add-to-cart-btn" class="add-to-cart-btn bg-black text-white px-6 py-3 rounded-md hover:bg-gray-800 transition-colors duration-300 w-full mb-4"
                         data-product-id="{{ $product->id }}"
                         data-product-name="{{ $product->name }}"
                         data-product-price="{{ $product->price }}"
@@ -58,7 +58,7 @@
                         ADD TO CART
                     </button>
 
-                    <button id="quickview-wishlist-button" class="wishlist-button border border-gray-300 text-gray-700 px-6 py-3 rounded-md hover:bg-gray-100 transition-colors duration-300 w-full flex items-center justify-center"
+                    <button id="singel-product-quickview-wishlist-button" class="wishlist-button border border-gray-300 text-gray-700 px-6 py-3 rounded-md hover:bg-gray-100 transition-colors duration-300 w-full flex items-center justify-center"
                     data-id="{{ $product->id }}"
                     data-name="{{ $product->name }}"
                     data-price="{{ $product->price }}"
@@ -69,11 +69,11 @@
                 </button>
                 </div>
 
+
                 <div class="text-sm text-gray-600 mt-4">
                     <p>SKU: {{ $product->sku ?? 'N/A' }}</p>
                  <p>Categories:
                     @if (isset($product->category))
-                    {{-- {{ route('category.show', $product->category->slug) }} --}}
                         <a href="" class="hover:underline">{{ $product->category->name }}</a>
                     @else
                         N/A
@@ -266,6 +266,82 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 });
 </script>
+
+{{-- js for singel product add to card  --}}
+{{-- <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // নতুন HTML অংশের জন্য DOM এলিমেন্টগুলো ধরুন
+        const singleProductSizeSelect = document.getElementById('singel-product-quickview-size-select');
+        const singleProductQuantityMinusBtn = document.getElementById('singel-product-quickview-quantity-minus-btn');
+        const singleProductQuantityInput = document.getElementById('singel-product-quickview-quantity-input');
+        const singleProductQuantityPlusBtn = document.getElementById('singel-product-quickview-quantity-plus-btn');
+        const singleProductAddToCartBtn = document.getElementById('singel-product-quickview-add-to-cart-btn');
+        const singleProductSizeContainer = document.getElementById('singel-product-quickview-size-container'); // যদি সাইজ কন্টেইনারের ভিজিবিলিটি দরকার হয়
+
+        // Quantity Minus Button
+        if (singleProductQuantityMinusBtn) {
+            singleProductQuantityMinusBtn.addEventListener('click', function() {
+                let currentValue = parseInt(singleProductQuantityInput.value);
+                if (currentValue > 1) {
+                    singleProductQuantityInput.value = currentValue - 1;
+                }
+            });
+        }
+
+        // Quantity Plus Button
+        if (singleProductQuantityPlusBtn) {
+            singleProductQuantityPlusBtn.addEventListener('click', function() {
+                let currentValue = parseInt(singleProductQuantityInput.value);
+                singleProductQuantityInput.value = currentValue + 1;
+            });
+        }
+
+        // Add to Cart Button for the single product section
+        if (singleProductAddToCartBtn) {
+            singleProductAddToCartBtn.addEventListener('click', function(event) {
+                const productId = event.currentTarget.dataset.productId;
+                const productName = event.currentTarget.dataset.productName;
+                const productPrice = parseFloat(event.currentTarget.dataset.productPrice);
+                const productImage = event.currentTarget.dataset.productImage;
+
+                const quantity = parseInt(singleProductQuantityInput.value);
+                let selectedSize = '';
+
+                // Check if size selection is needed for this product (based on the presence of options other than "Choose an option")
+                if (singleProductSizeSelect && singleProductSizeSelect.options.length > 1 && singleProductSizeContainer.style.display !== 'none') {
+                    selectedSize = singleProductSizeSelect.value;
+                    if (selectedSize === "") {
+                        // Show alert if size is not selected and it's required
+                        if (typeof window.showAlertDialog === 'function') {
+                            window.showAlertDialog('অনুগ্রহ করে একটি সাইজ নির্বাচন করুন।'); // "Please select a size."
+                        } else {
+                            alert('অনুগ্রহ করে একটি সাইজ নির্বাচন করুন।');
+                        }
+                        return; // Stop execution if size is not selected
+                    }
+                }
+
+                const product = {
+                    id: productId,
+                    name: productName,
+                    price: productPrice,
+                    image: productImage
+                };
+
+                // Add to cart using the existing global function
+                if (typeof window.addToCart === 'function') {
+                    window.addToCart(product, quantity, selectedSize);
+                    // Optionally, you can add a confirmation message here
+                    // if (typeof window.showAlertDialog === 'function') {
+                    //     window.showAlertDialog('পণ্যটি কার্টে যোগ করা হয়েছে!'); // "Product added to cart!"
+                    // }
+                } else {
+                    console.error('addToCart function is not defined.');
+                }
+            });
+        }
+    });
+</script> --}}
 @endpush
 
 
