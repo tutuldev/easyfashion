@@ -34,6 +34,20 @@
                             <li><a href="#" class="block p-2 text-gray-400 hover:bg-gray-700 rounded-md text-sm">Category Reports</a></li>
                         </ul>
                     </li>
+                    <li class="mb-2">
+                        <button class="flex items-center justify-between w-full p-2 text-gray-300 hover:bg-gray-700 rounded-md transition duration-200 focus:outline-none" data-dropdown-target="subcategoriesDropdown">
+                            <span class="flex items-center">
+                                <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                                Sub-Categories
+                            </span>
+                            <svg class="w-4 h-4 transform transition-transform arrow-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </button>
+                        <ul id="subcategoriesDropdown" class="dropdown-menu ml-6 mt-1 space-y-1">
+                            <li><a href="{{route('subcategories.index')}}" class="block p-2 text-gray-400 hover:bg-gray-700 rounded-md text-sm">All Sub-Categories</a></li>
+                            <li><a href="{{route("categories.create")}}" class="block p-2 text-gray-400 hover:bg-gray-700 rounded-md text-sm">Add New Sub-Category</a></li>
+                            <li><a href="#" class="block p-2 text-gray-400 hover:bg-gray-700 rounded-md text-sm">Sub Category Reports</a></li>
+                        </ul>
+                    </li>
 
                     <li class="mb-2">
                         <button class="flex items-center justify-between w-full p-2 text-gray-300 hover:bg-gray-700 rounded-md transition duration-200 focus:outline-none" data-dropdown-target="productsDropdown">

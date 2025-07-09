@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Backend\CategoryController;
 use App\Http\Controllers\Backend\ProductController;
+use App\Http\Controllers\Backend\SubcategoryController;
 use App\Http\Controllers\Frontend\FroProductController;
 use App\Http\Controllers\Frontend\HomeController;
 use App\Http\Controllers\OrderController;
@@ -32,6 +33,8 @@ Route::middleware('auth')->group(function () {
 
 
     Route::resource('categories', CategoryController::class);
+    Route::resource('subcategories', SubcategoryController::class);
+
     Route::resource('products', ProductController::class);
 
     // order notification
