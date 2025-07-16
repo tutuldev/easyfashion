@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Backend\CategoryController;
+use App\Http\Controllers\Backend\DashboardController;
 use App\Http\Controllers\Backend\ProductController;
 use App\Http\Controllers\Backend\SubcategoryController;
 use App\Http\Controllers\Frontend\FroProductController;
@@ -21,9 +22,13 @@ Route::get('/category/{slug}', [CategoryController::class, 'singleCategoryShow']
 Route::get('/', [HomeController::class, 'index']);
 
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+// Route::get('/dashboard', function () {
+//     return view('dashboard');
+// })->middleware(['auth', 'verified'])->name('dashboard');
+Route::middleware(['auth','verified'])
+      ->get('/dashboard', [DashboardController::class,'index'])
+      ->name('dashboard');
+
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -34,6 +39,9 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('categories', CategoryController::class);
     Route::resource('subcategories', SubcategoryController::class);
+    Route::get('/products/subcategory/{subcategoryName}', [ProductController::class, 'filterBySubcategory'])
+     ->name('products.filterBySubcategory');
+
 
     Route::resource('products', ProductController::class);
 

@@ -12,26 +12,33 @@ class CategorySeeder extends Seeder
     public function run(): void
     {
         $categories = [
-            [
-                'name' => 'Casual Shirt',
-                'image' => 'images/trending-1.webp'
+          
+             [
+            'name' => 'Panjabi',
+            'image' => 'images/cat-3.webp'
             ],
-            [
-                'name' => 'Polo',
-                'image' => 'images/trending-2.webp'
-            ],
-            [
-                'name' => 'Half Shirt',
-                'image' => 'images/cat-1.webp'
-            ],
-            [
-                'name' => 'Printed T-Shart',
-                'image' => 'images/cat-2.webp'
-            ],
-            [
-                'name' => 'Panjabi',
+              [
+                'name' => 'T-Sharts',
                 'image' => 'images/cat-3.webp'
             ],
+            [
+                'name' => 'Shirts',
+                'image' => 'images/cat-3.webp'
+            ],
+            [
+                'name' => 'Junior',
+                'image' => 'images/cat-3.webp'
+            ],
+
+            [
+                'name' => 'Accessories',
+                'image' => 'images/cat-3.webp'
+            ],
+            [
+                'name' => 'Pants',
+                'image' => 'images/cat-3.webp'
+            ],
+
         ];
 
         foreach ($categories as $categoryData) {

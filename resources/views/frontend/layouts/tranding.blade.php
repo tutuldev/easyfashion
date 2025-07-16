@@ -1,7 +1,7 @@
 <section class="trending bg-white py-8 px-4">
  <div class="flex flex-col md:flex-row max-w-screen-xl gap-8 mx-auto">
 
-          @foreach($trendingCategories as $category)
+          @foreach($trending as $category)
          <a href="{{ route('category.single.show', $category->slug) }}"
          class="relative w-full h-[530px] group/item overflow-hidden rounded-lg shadow-lg"
      style="background-image:url('{{ $category->image ? (Str::startsWith($category->image, 'categories/') ? asset('storage/' . $category->image) : asset($category->image)) : '' }}');background-size:cover;background-position:center;">

@@ -1,11 +1,11 @@
 @extends('backend.app')
-@section('title', $title . ' Category') {{-- Dynamic title for the filtered page --}}
+@section('title', $title .' '.  $context) {{-- Dynamic title for the filtered page --}}
 
 @section('content')
     <!-- Header and Add Button (Modified for Product Filter) -->
     <div class="flex items-center justify-between flex-wrap gap-4">
         <h2 class="text-2xl font-semibold flex items-center">
-            Products in "{{ $title }}" Category
+            Products in "{{ $title }}" {{$context}}
             <span class="inline-flex items-center justify-center w-6 h-6 ml-2 text-xs font-bold text-white bg-green-600  rounded-full">
                 {{ $products->total() }} {{-- Show total products in this category --}}
             </span>

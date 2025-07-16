@@ -2,12 +2,11 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use App\Models\Product;
+use App\Models\Category;
+use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Storage;
 use Faker\Factory as Faker;
-use Illuminate\Support\Facades\Log;
 
 class ProductSeeder extends Seeder
 {
@@ -15,81 +14,58 @@ class ProductSeeder extends Seeder
     {
         $faker = Faker::create('en_US');
 
+        // ধরে নিচ্ছি CategorySeeder আগেই চালানো হয়েছে
+        $categories = Category::with('subcategories')->get();
 
-        $productsData = [
-            ['Classic T-Shirt', 'Basic cotton t-shirt for everyday wear.', 499.99, 1],
-            ['Graphic T-Shirt', 'Trendy printed t-shirt for casual looks.', 599.00, 1],
-            ['Striped T-Shirt', 'Stylish striped design for a smart look.', 549.50, 1],
-            ['Round Neck T-Shirt', 'Comfortable round neck design.', 429.99, 1],
-            ['Plain T-Shirt', 'Minimal design for daily use.', 399.00, 1],
+        if ($categories->isEmpty()) {
+            $this->command->warn('⚠️  কোনও ক্যাটেগরি পাওয়া যায়নি—আগে CategorySeeder চালান।');
+            return;
+        }
 
-            ['Half Sleeve Cotton Shirt', 'Soft and breathable fabric.', 379.00, 2],
-            ['Half Sleeve Slim Fit', 'Perfect fit for summer.', 420.00, 2],
-            ['Half Sleeve Printed Shirt', 'Cool prints for casual vibes.', 499.00, 2],
-            ['Casual Half Shirt', 'Relaxed fit for hot days.', 450.00, 2],
-            ['Denim Half Sleeve Shirt', 'Durable and stylish.', 599.00, 2],
+        $imageIndex = 1;         // images/pro-1.webp … pro-10.webp
+        $imageMax   = 10;
 
-            ['Polo T-Shirt Classic', 'Signature polo with collar.', 699.99, 3],
-            ['Polo T-Shirt Premium', 'High-quality fabric and fit.', 799.99, 3],
-            ['Sports Polo Shirt', 'Moisture-wicking for sports.', 749.00, 3],
-            ['Casual Polo', 'Best for daily wear.', 599.00, 3],
-            ['Luxury Polo Shirt', 'Soft touch premium material.', 899.00, 3],
+        /* ---------- ৫০‑বার লুপ, সব রকম ভ্যারিয়েশন ---------- */
+        foreach (range(1, 50) as $loop) {
 
-            ['Festive Panjabi', 'Perfect for weddings & events.', 1199.00, 4],
-            ['Cotton Panjabi', 'Comfortable and traditional.', 999.00, 4],
-            ['Designer Panjabi', 'Unique embroidery and texture.', 1599.00, 4],
-            ['Formal Panjabi', 'Subtle and classy design.', 1299.00, 4],
-            ['Casual Panjabi', 'Lightweight for daily wear.', 899.00, 4],
-        ];
+            // র‍্যান্ডম ক্যাটেগরি ও (থাকলে) তার সাব‑ক্যাটেগরি
+            $category    = $categories->random();
+            $subcategory = $category->subcategories->random() ?? null;
 
-        $imageIndex = 1; // For cycling through pro-1.webp to pro-10.webp
+            /* ------------ নাম, দাম, বর্ণনা ------------ */
+            $name = $faker->randomElement([
+                'Classic', 'Premium', 'Budget', 'Luxury', 'Sport', 'Eco', 'Smart'
+            ]) . ' ' . $faker->randomElement([
+                'T‑Shirt', 'Shirt', 'Polo', 'Panjabi', 'Hoodie', 'Jacket', 'Trouser'
+            ]);
 
-        foreach ($productsData as [$name, $description, $price, $category_id]) {
-            $currentPrice = $price;
-            $compareAtPrice = null;
-            // Optionally set a compare_at_price for some products (e.g., 50% chance)
-            if ($faker->boolean(50)) {
-                $compareAtPrice = round($currentPrice * $faker->randomFloat(2, 1.1, 1.5), 2); // 10% to 50% higher
-            }
+            $price           = $faker->randomFloat(2, 299, 1999);                 // ৳২৯৯‑৳১৯৯৯
+            $compareAtPrice  = $faker->boolean(60) ? round($price * $faker->randomFloat(2, 1.1, 1.6), 2) : null;
+            $costPrice       = round($price * $faker->randomFloat(2, 0.5, 0.8), 2);
 
-            // Generate an SKU
-            $sku = 'PROD-' . strtoupper(Str::random(6)) . '-' . rand(100, 999);
-
-            // Set quantity in stock
-            $quantityInStock = $faker->numberBetween(10, 200);
-
-            // Set active status
-            $active = $faker->boolean(95); // 95% chance to be active
-
-            // --- Image Handling ---
+            /* --------------- ছবি অ্যারে --------------- */
+            $numImages  = rand(1, 3);
             $imagePaths = [];
-            $numberOfImages = rand(1, 3); // Each product can have 1 to 3 images
 
-            for ($i = 0; $i < $numberOfImages; $i++) {
-                // Construct the image path based on your specified structure
-                // 'images/' is the sub-directory inside 'public'
-                $imagePaths[] = 'images/pro-' . $imageIndex . '.webp'; // ✅ এখানে পরিবর্তন করা হয়েছে
-
-                // Increment index and reset if it goes beyond 10
-                $imageIndex++;
-                if ($imageIndex > 10) {
-                    $imageIndex = 1;
-                }
+            for ($i = 0; $i < $numImages; $i++) {
+                $imagePaths[] = 'images/pro-' . $imageIndex . '.webp';
+                $imageIndex   = ($imageIndex >= $imageMax) ? 1 : $imageIndex + 1;
             }
-            // --- End Image Handling ---
 
+            /* --------------- প্রোডাক্ট তৈরি --------------- */
             Product::create([
                 'name'              => $name,
-                'slug'              => Str::slug($name),
-                'description'       => $description,
-                'price'             => $currentPrice,
+                'slug'              => Str::slug($name . '-' . $loop),   // ইউনিক রেখে
+                'description'       => $faker->sentence(15),
+                'price'             => $price,
                 'compare_at_price'  => $compareAtPrice,
-                'cost_price'        => round($currentPrice * $faker->randomFloat(2, 0.5, 0.8), 2), // Cost is 50-80% of current price
-                'sku'               => $sku,
-                'quantity_in_stock' => $quantityInStock,
-                'active'            => $active,
-                'category_id'       => $category_id,
-                'images'            => $imagePaths, // Store the array of static image paths
+                'cost_price'        => $costPrice,
+                'sku'               => 'PROD-' . strtoupper(Str::random(6)) . '-' . rand(100, 999),
+                'quantity_in_stock' => $faker->numberBetween(0, 250),
+                'active'            => $faker->boolean(90),
+                'category_id'       => $category->id,
+                'subcategory_id'    => optional($subcategory)->id,
+                'images'            => $imagePaths,                       // Product মডেলে 'images' => 'array' কাস্ট
             ]);
         }
     }

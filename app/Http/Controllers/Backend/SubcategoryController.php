@@ -13,8 +13,9 @@ class SubcategoryController extends Controller
 {
     public function index()
     {
-        $subcategories = Subcategory::with('category')->paginate(10);
+        $subcategories = Subcategory::with('category')->withCount('products')->paginate(10);
         return view('backend.subcategories.index', compact('subcategories'));
+
     }
 
     public function create()

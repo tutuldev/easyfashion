@@ -17,6 +17,7 @@ class Product extends Model
         'quantity_in_stock',
         'active',
         'category_id',
+        'subcategory_id',
         'images',
     ];
 
@@ -32,5 +33,9 @@ class Product extends Model
     public function category()
     {
         return $this->belongsTo(Category::class);
+    }
+    public function subcategory()
+    {
+        return $this->belongsTo(Subcategory::class);
     }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Backend;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\Subcategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
@@ -23,12 +24,14 @@ class ProductController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-  public function create()
+ public function create()
 {
-    $categories = Category::all(); // Assuming you have a Category model
+    $categories = Category::all();
+    $subcategories = Subcategory::with('category')->get(); // যাতে parent category name দেখানো যায়
 
-    return view('backend.products.create', compact('categories'));
+    return view('backend.products.create', compact('categories', 'subcategories'));
 }
+
 
 
     /**
@@ -46,6 +49,7 @@ class ProductController extends Controller
             'description'       => 'nullable|string',
             'price'             => 'required|numeric|min:0',
             'category_id'       => 'required|exists:categories,id',
+            'subcategory_id'    => 'nullable|exists:subcategories,id',
             'images.*'          => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048', // প্রতিটি ইমেজের জন্য
         ]);
 
@@ -61,6 +65,7 @@ class ProductController extends Controller
         'quantity_in_stock' => $validated['quantity_in_stock'],
         'active'            => $validated['active'],
         'category_id'       => $validated['category_id'],
+        'subcategory_id'    => $validated['subcategory_id'] ?? null,
         'images'            => [], // প্রথমে একটি খালি অ্যারে সেট করা হলো, পরে ইমেজগুলো যোগ হবে
     ]);
 
@@ -93,11 +98,13 @@ class ProductController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-   public function edit(Product $product)
-    {
-        $categories = Category::all();
-        return view('backend.products.edit', compact('product', 'categories'));
-    }
+public function edit(Product $product)
+{
+    $categories = Category::all();
+    $subcategories = Subcategory::with('category')->get();
+
+    return view('backend.products.edit', compact('product', 'categories', 'subcategories'));
+}
 
 
     /**
@@ -115,6 +122,7 @@ public function update(Request $request, Product $product)
         'description'       => 'nullable|string',
         'price'             => 'required|numeric|min:0',
         'category_id'       => 'required|exists:categories,id',
+        'subcategory_id'    => 'nullable|exists:subcategories,id',
         'images.*'          => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         'remove_images'     => 'nullable|array',
         'remove_images.*'   => 'string', // পাথের জন্য স্ট্রিং
@@ -132,6 +140,7 @@ public function update(Request $request, Product $product)
         'quantity_in_stock' => $validated['quantity_in_stock'],
         'active'            => $validated['active'],
         'category_id'       => $validated['category_id'],
+        'subcategory_id'    => $validated['subcategory_id'] ?? null,
     ]);
 
 
@@ -184,8 +193,8 @@ public function destroy(Product $product)
     return redirect()->route('products.index')->with('success', 'Product deleted successfully.');
 }
 
-// product filter
- public function filterByCategory($categoryName)
+// product filter by category
+    public function filterByCategory($categoryName)
     {
         // 'category' হলো Product মডেলে Category-এর সাথে রিলেশনের নাম
         $products = Product::whereHas('category', function ($query) use ($categoryName) {
@@ -195,10 +204,26 @@ public function destroy(Product $product)
                             ->paginate(10); // প্রতি পেজে 10টি প্রোডাক্ট দেখাবে
 
         $title = $categoryName; // ভিউতে দেখানোর জন্য টাইটেল সেট করুন
-        $context = 'category';  // ভিউতে কনটেক্সট বোঝানোর জন্য (ঐচ্ছিক)
+        $context = 'Category';  // ভিউতে কনটেক্সট বোঝানোর জন্য (ঐচ্ছিক)
 
         // 'products.filtered' নামে একটি নতুন ভিউ ফাইল তৈরি করুন অথবা বিদ্যমান ভিউ ব্যবহার করুন
         return view('backend.products.filtered', compact('products', 'title', 'context'));
     }
+
+    // product filter by Subcategory
+    public function filterBySubcategory($subcategorySlug)
+    {
+        $products = Product::whereHas('subcategory', function ($q) use ($subcategorySlug) {
+                            $q->where('slug', $subcategorySlug);   // <-- name নয়, slug
+                        })
+                        ->paginate(10);
+
+        $title   = $subcategorySlug;   // চাইলে এখানে সুন্দর করে human‑readable করতে পারেন
+        $context = 'Subcategory';
+
+        return view('backend.products.filtered', compact('products', 'title', 'context'));
+    }
+
+
 
 }

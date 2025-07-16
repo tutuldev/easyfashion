@@ -4,9 +4,9 @@
 @section('content')
     {{-- banner --}}
     @include('frontend.layouts.banner')
-    @include('frontend.layouts.tranding', ['trendingCategories' => $trendingCategories])
+    @include('frontend.layouts.tranding', ['trending' => $trending])
     @include('frontend.layouts.polo-collections', ['products' => $products])
-    @include('frontend.layouts.product-category', ['commonCategories' => $commonCategories])
+    @include('frontend.layouts.product-category', ['commonSubategories' => $commonSubategories, 'panjabi' => $panjabi])
     @include('frontend.layouts.jins')
     @include('frontend.layouts.social')
     @include('frontend.layouts.video')
